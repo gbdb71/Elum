@@ -24,5 +24,16 @@ function loop()
   draw();
 }
 
+function handleClick(mouseEvent)
+{
+  var relativeX = mouseEvent.x - canvas.offsetLeft;
+  var relativeY = mouseEvent.y - canvas.offsetTop;
+
+  var gridCoords = grid.getGridCoordinates(relativeX, relativeY);
+  console.log(gridCoords);
+}
+
 window.setInterval(loop, 200);
 loop();
+
+canvas.addEventListener('click', handleClick, false);

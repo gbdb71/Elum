@@ -70,6 +70,15 @@ Grid.prototype.eachBlock = function(callback)
 
 }
 
+Grid.prototype.getGridCoordinates = function(x, y) {
+
+  return {
+      x: Math.floor(x/this.tileSize),
+      y: Math.floor(y/this.tileSize)
+  };
+
+}
+
 Grid.prototype.draw = function(context)
 {
   var tileSize = this.tileSize;
