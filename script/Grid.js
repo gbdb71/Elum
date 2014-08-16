@@ -206,9 +206,8 @@ Grid.prototype.update = function()
 
       if(direction === NEIGHBOR_DIRECTION.BOTTOM)
       {
-        // EARTH and WATER smother FIRE
-        // EARTH and WATER crush WIND
-        if((block.type === BLOCK_TYPE.EARTH || block.type === BLOCK_TYPE.WATER)
+        // EARTH smothers FIRE and crushes WIND beneath it
+        if(block.type === BLOCK_TYPE.EARTH
             && (neighborBlock.type === BLOCK_TYPE.WIND || neighborBlock.type === BLOCK_TYPE.FIRE))
         {
           self.removeBlock(x, y + 1);
@@ -216,7 +215,17 @@ Grid.prototype.update = function()
         }
       }
 
-      // WATER smothers any fire near it
+      if(block.direction != NEIGHBOR_DIRECTION.TOP)
+      {
+        // WATER consumes any WIND that is not on top of it
+        if(block.type === BLOCK_TYPE.WATER && neighborBlock.type === BLOCK_TYPE.WIND)
+        {
+          self.removeBlock(neighborX, neighborY);
+          return;
+        }
+      }
+
+      // WATER smothers any FIRE near it
       if(block.type === BLOCK_TYPE.WATER && neighborBlock.type === BLOCK_TYPE.FIRE)
       {
         self.removeBlock(neighborX, neighborY);
