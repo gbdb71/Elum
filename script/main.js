@@ -29,18 +29,53 @@ function handleClick(mouseEvent)
   if(grid.canAddBlock(gridCoords.x, gridCoords.y))
   {
     var nextBlockType = getNextBlockType();
-    console.log(nextBlockType);
     grid.addBlock(gridCoords.x, gridCoords.y, getNextBlockType());
+  }
+}
+
+var randomBlockEnabled = true;
+var nextBlockType = BLOCK_TYPE.EMPTY;
+
+function handleKeyPress(keyboardEvent)
+{
+  switch(keyboardEvent.which)
+  {
+    case 81: // Q
+      randomBlockEnabled = false;
+      nextBlockType = BLOCK_TYPE.EARTH;
+      break;
+
+    case 87: // W
+      randomBlockEnabled = false;
+      nextBlockType = BLOCK_TYPE.WATER;
+      break;
+
+    case 69: // E
+      randomBlockEnabled = false;
+      nextBlockType = BLOCK_TYPE.WIND;
+      break;
+
+    case 82: // R
+      randomBlockEnabled = false;
+      nextBlockType = BLOCK_TYPE.FIRE;
+      break;
+
+  case 84: // T
+    randomBlockEnabled = true;
+    nextBlockType = BLOCK_TYPE.EMPTY;
+    break;
   }
 }
 
 function getNextBlockType() {
 
-  return Math.floor(Math.random() * 4) + 1;
-
+  return randomBlockEnabled
+    ? Math.floor(Math.random() * 4) + 1
+    : nextBlockType;
 }
 
 window.setInterval(loop, 100);
 loop();
 
 canvas.addEventListener('click', handleClick, false);
+window.addEventListener('keydown', handleKeyPress, false);
