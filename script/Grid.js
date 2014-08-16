@@ -226,9 +226,17 @@ Grid.prototype.update = function()
         return;
       }
 
+      // WATER can erode EARTH
       if(block.type === BLOCK_TYPE.EARTH && neighborBlock.type === BLOCK_TYPE.WATER)
       {
         block.health--;
+        return;
+      }
+
+      if(block.type === BLOCK_TYPE.FIRE && neighborBlock.type === BLOCK_TYPE.WIND)
+      {
+        self.removeBlock(neighborX, neighborY);
+        self.placeBlock(neighborX, neighborY, new Block(BLOCK_TYPE.FIRE));
         return;
       }
 
