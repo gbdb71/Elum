@@ -233,6 +233,7 @@ Grid.prototype.update = function()
         return;
       }
 
+      // WIND can spread FIRE
       if(block.type === BLOCK_TYPE.FIRE && neighborBlock.type === BLOCK_TYPE.WIND)
       {
         self.removeBlock(neighborX, neighborY);
@@ -255,23 +256,26 @@ Grid.prototype.update = function()
     }
     else
     {
-
-      // If water can't move downwards, it will spill outwards
       if(block.type === BLOCK_TYPE.WATER)
       {
-
-        // Spread right
-        if(self.canPlaceBlock(x + 1, y))
+        if(block.spreadTimer <= 0)
         {
-          self.placeBlock(x + 1, y, new Block(BLOCK_TYPE.WATER));
-        }
+          // Spread right
+          if(self.canPlaceBlock(x + 1, y))
+          {
+            self.placeBlock(x + 1, y, new Block(BLOCK_TYPE.WATER));
+          }
 
-        // Spread left
-        if(self.canPlaceBlock(x - 1, y))
+          // Spread left
+          if(self.canPlaceBlock(x - 1, y))
+          {
+            self.placeBlock(x - 1, y, new Block(BLOCK_TYPE.WATER));
+          }
+        }
+        else
         {
-          self.placeBlock(x - 1, y, new Block(BLOCK_TYPE.WATER));
+          block.spreadTimer--;
         }
-
       }
     }
 

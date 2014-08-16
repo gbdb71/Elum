@@ -10,6 +10,7 @@ function Block(blockType) {
 
   this.type = blockType;
   this.maxHealth = 0;
+  this.spreadTimer = 5;
 
   switch(this.type)
   {
@@ -18,7 +19,7 @@ function Block(blockType) {
       break;
 
     case BLOCK_TYPE.EARTH:
-      this.maxHealth = 100;
+      this.maxHealth = 500;
       break;
 
     case BLOCK_TYPE.FIRE:
