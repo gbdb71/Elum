@@ -32,14 +32,27 @@ Grid.prototype.removeBlock = function(x, y)
 
 }
 
-Grid.prototype.canPlaceBlock = function(x, y)
+Grid.prototype.isValidTile = function(x, y)
 {
 
   return (x >= 0)
           && (x < this.width)
           && (y >= 0)
-          && (y < this.height)
-          && (this.grid[x][y] === null);
+          && (y < this.height);
+
+}
+
+Grid.prototype.canPlaceBlock = function(x, y)
+{
+
+  return this.isValidTile(x, y) && (this.grid[x][y] === null);
+
+}
+
+Grid.prototype.getBlock = function(x, y)
+{
+
+  return (this.isValidTile(x, y)) ? this.grid[x][y] : null;
 
 }
 
@@ -129,7 +142,7 @@ Grid.prototype.update = function()
 
   this.eachBlock(function(x, y, block) {
 
-    // Natural deterioration
+    // FIRE and WIND naturally deteriorate
     if(block.type === BLOCK_TYPE.FIRE
         || block.type === BLOCK_TYPE.WIND)
     {
@@ -138,6 +151,23 @@ Grid.prototype.update = function()
       if(block.health <= 0) {
         self.removeBlock(x, y);
         return;
+      }
+    }
+
+    // Check interactions with the block UNDER this block
+    var bottomBlock = self.getBlock(x, y + 1);
+
+    if(bottomBlock != null)
+    {
+      // EARTH smothers FIRE
+      // EARTH crushes WIND
+      if(block.type === BLOCK_TYPE.EARTH &&
+          (
+            bottomBlock.type === BLOCK_TYPE.WIND
+            || bottomBlock.type === BLOCK_TYPE.FIRE)
+          )
+      {
+        self.removeBlock(x, y + 1);
       }
     }
 
