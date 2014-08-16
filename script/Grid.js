@@ -1,3 +1,10 @@
+var NEIGHBOR_DIRECTION = {
+  LEFT: 0,
+  RIGHT: 1,
+  TOP: 2,
+  BOTTOM: 3
+};
+
 function Grid()
 {
 
@@ -54,6 +61,46 @@ Grid.prototype.getBlock = function(x, y)
 
   return (this.isValidTile(x, y)) ? this.grid[x][y] : null;
 
+}
+
+Grid.prototype.eachNeighborBlock = function(x, y, callback)
+{
+  var neighborBlocks = [];
+
+  var bottomBlock = this.getBlock(x, y + 1);
+  neighborBlocks.push({
+    x: x, y: y + 1, block: bottomBlock,
+    direction: NEIGHBOR_DIRECTION.BOTTOM
+  });
+
+  var topBlock = this.getBlock(x, y - 1);
+  neighborBlocks.push({
+    x: x, y: y - 1, block: topBlock,
+    direction: NEIGHBOR_DIRECTION.TOP
+  });
+
+  var leftBlock = this.getBlock(x - 1, y);
+  neighborBlocks.push({
+    x: x - 1, y: y, block: leftBlock,
+    direction: NEIGHBOR_DIRECTION.LEFT
+  });
+
+  var rightBlock = this.getBlock(x + 1, y);
+  neighborBlocks.push({
+    x: x + 1, y: y, block: rightBlock,
+    direction: NEIGHBOR_DIRECTION.RIGHT
+  });
+
+  for(var i=0; i<4; i++) {
+    if(neighborBlocks[i].block != null) {
+      var currNeighborBlock = neighborBlocks[i];
+      callback(
+          currNeighborBlock.x,
+          currNeighborBlock.y,
+          currNeighborBlock.block,
+          currNeighborBlock.direction);
+    }
+  }
 }
 
 Grid.prototype.eachBlock = function(callback)
@@ -154,19 +201,29 @@ Grid.prototype.update = function()
       }
     }
 
-    // Check interactions with the block UNDER this block
-    var bottomBlock = self.getBlock(x, y + 1);
+    // Various neighbor block interactions
+    self.eachNeighborBlock(x, y, function(neighborX, neighborY, neighborBlock, direction) {
 
-    if(bottomBlock != null)
-    {
-      // EARTH and WATER smother FIRE
-      // EARTH and WATER crush WIND
-      if((block.type === BLOCK_TYPE.EARTH || block.type === BLOCK_TYPE.WATER)
-          && (bottomBlock.type === BLOCK_TYPE.WIND || bottomBlock.type === BLOCK_TYPE.FIRE))
+      if(direction === NEIGHBOR_DIRECTION.BOTTOM)
       {
-        self.removeBlock(x, y + 1);
+        // EARTH and WATER smother FIRE
+        // EARTH and WATER crush WIND
+        if((block.type === BLOCK_TYPE.EARTH || block.type === BLOCK_TYPE.WATER)
+            && (neighborBlock.type === BLOCK_TYPE.WIND || neighborBlock.type === BLOCK_TYPE.FIRE))
+        {
+          self.removeBlock(x, y + 1);
+          return;
+        }
       }
-    }
+
+      // WATER smothers any fire near it
+      if(block.type === BLOCK_TYPE.WATER && neighborBlock.type === BLOCK_TYPE.FIRE)
+      {
+        self.removeBlock(neighborX, neighborY);
+        return;
+      }
+
+    });
 
     // Gravity
     if(self.canPlaceBlock(x, y + 1))
