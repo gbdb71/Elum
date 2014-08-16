@@ -5,8 +5,6 @@ grid.addBlock(8, 9);
 var canvas = document.getElementById("game");
 var context = canvas.getContext("2d");
 
-context.fillStyle = "#000000";
-
 function update()
 {
   grid.update();
@@ -17,4 +15,11 @@ function draw()
   grid.draw(context);
 }
 
-draw();
+function loop()
+{
+  update();
+  draw();
+}
+
+window.setInterval(loop, 200);
+loop();

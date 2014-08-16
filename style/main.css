@@ -1,0 +1,10 @@
+body
+{
+  background: #000;
+}
+
+#game
+{
+  display: block;
+  margin: 0 auto;
+}
