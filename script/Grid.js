@@ -190,15 +190,9 @@ Grid.prototype.update = function()
   this.eachBlock(function(x, y, block) {
 
     // FIRE and WIND naturally deteriorate
-    if(block.type === BLOCK_TYPE.FIRE
-        || block.type === BLOCK_TYPE.WIND)
+    if(block.type === BLOCK_TYPE.FIRE || block.type === BLOCK_TYPE.WIND)
     {
       block.health--;
-
-      if(block.health <= 0) {
-        self.removeBlock(x, y);
-        return;
-      }
     }
 
     // Various neighbor block interactions
@@ -232,7 +226,18 @@ Grid.prototype.update = function()
         return;
       }
 
+      if(block.type === BLOCK_TYPE.EARTH && neighborBlock.type === BLOCK_TYPE.WATER)
+      {
+        block.health--;
+        return;
+      }
+
     });
+
+    if(block.health <= 0) {
+      self.removeBlock(x, y);
+      return;
+    }
 
     // Gravity
     if(self.canPlaceBlock(x, y + 1))
