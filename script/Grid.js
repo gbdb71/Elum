@@ -12,23 +12,23 @@ function Grid()
 
     for(var y=0; y<this.height; y++)
     {
-      this.grid[x][y] = 0;
+      this.grid[x][y] = BLOCK_TYPE.EMPTY;
     }
   }
 
 }
 
-Grid.prototype.addBlock = function(x, y)
+Grid.prototype.addBlock = function(x, y, blockType)
 {
 
-  this.grid[x][y] = 1;
+  this.grid[x][y] = blockType;
 
 }
 
 Grid.prototype.removeBlock = function(x, y)
 {
 
-  this.grid[x][y] = 0;
+  this.grid[x][y] = BLOCK_TYPE.EMPTY;
 
 }
 
@@ -39,7 +39,7 @@ Grid.prototype.canAddBlock = function(x, y)
           && (x < this.width)
           && (y >= 0)
           && (y < this.height)
-          && (this.grid[x][y] == 0);
+          && (this.grid[x][y] === BLOCK_TYPE.EMPTY);
 
 }
 
@@ -51,9 +51,9 @@ Grid.prototype.eachBlock = function(callback)
   {
     for(var y=0; y<this.height; y++)
     {
-      if(this.grid[x][y] == 1)
+      if(this.grid[x][y] != BLOCK_TYPE.EMPTY)
       {
-        blocks.push({ x: x, y: y });
+        blocks.push({ x: x, y: y, blockType: this.grid[x][y] });
       }
     }
   }
@@ -65,7 +65,7 @@ Grid.prototype.eachBlock = function(callback)
   for(var i=0; i<blocksCount; i++)
   {
     var currBlock = blocks[i];
-    callback(currBlock.x, currBlock.y);
+    callback(currBlock.x, currBlock.y, currBlock.blockType);
   }
 
 }
@@ -79,8 +79,30 @@ Grid.prototype.draw = function(context)
   context.fillRect(0, 0, this.width * tileSize, this.height * tileSize);
 
   // Draw each tile
-  context.fillStyle = "#000000";
-  this.eachBlock(function(x, y) {
+  this.eachBlock(function(x, y, blockType) {
+
+    switch(blockType)
+    {
+      case BLOCK_TYPE.FIRE:
+        context.fillStyle = "#D61E1E";
+        break;
+
+      case BLOCK_TYPE.EARTH:
+        context.fillStyle = "#C46B21";
+        break;
+
+      case BLOCK_TYPE.WATER:
+        context.fillStyle = "#2168C4";
+        break;
+
+      case BLOCK_TYPE.WIND:
+        context.fillStyle = "#70D0E6";
+        break;
+
+      default:
+        context.fillStyle = "#000000";
+    }
+
     context.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
   });
 
@@ -91,7 +113,7 @@ Grid.prototype.update = function()
 
   var self = this;
 
-  this.eachBlock(function(x, y) {
+  this.eachBlock(function(x, y, blockType) {
 
     var newX = x;
     var newY = y + 1;
@@ -100,7 +122,7 @@ Grid.prototype.update = function()
     if(self.canAddBlock(newX, newY))
     {
       self.removeBlock(x, y);
-      self.addBlock(newX, newY);
+      self.addBlock(newX, newY, blockType);
     }
 
   });
