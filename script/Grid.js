@@ -231,6 +231,27 @@ Grid.prototype.update = function()
       self.removeBlock(x, y);
       self.placeBlock(x, y + 1, block);
     }
+    else
+    {
+
+      // If water can't move downwards, it will spill outwards
+      if(block.type === BLOCK_TYPE.WATER)
+      {
+
+        // Spread right
+        if(self.canPlaceBlock(x + 1, y))
+        {
+          self.placeBlock(x + 1, y, new Block(BLOCK_TYPE.WATER));
+        }
+
+        // Spread left
+        if(self.canPlaceBlock(x - 1, y))
+        {
+          self.placeBlock(x - 1, y, new Block(BLOCK_TYPE.WATER));
+        }
+
+      }
+    }
 
   });
 
