@@ -1,37 +1,64 @@
-// Initialize the grid
-var width = 50;
-var height = 100;
-var tileSize = 20;
-
-var grid = [];
-
-for(var x=0; x<width; x++)
+function Grid()
 {
-  grid[x] = [];
 
-  for(var y=0; y<height; y++)
+  this.width = 50;
+  this.height = 100;
+  this.tileSize = 20;
+  this.grid = [];
+
+  for(var x=0; x<this.width; x++)
   {
-    grid[x][y] = 0;
+    this.grid[x] = [];
+
+    for(var y=0; y<this.height; y++)
+    {
+      this.grid[x][y] = 0;
+    }
   }
+
 }
 
-grid[3][5] = 1;
-grid[8][9] = 1;
+Grid.prototype.addBlock = function(x, y)
+{
 
-// Get the canvas
+  this.grid[x][y] = 1;
+
+}
+
+Grid.prototype.draw = function(context)
+{
+
+  // Draw the grid
+  for(var x=0; x<this.grid.length; x++)
+  {
+    for(var y=0; y<this.grid[x].length; y++)
+    {
+      if(this.grid[x][y] == 1)
+      {
+        context.fillRect(x * this.tileSize, y * this.tileSize, this.tileSize, this.tileSize);
+      }
+    }
+  }
+
+}
+
+var grid = new Grid();
+grid.addBlock(3, 5);
+grid.addBlock(8, 9);
+
 var canvas = document.getElementById("game");
 var context = canvas.getContext("2d");
 
 context.fillStyle = "#000000";
 
-// Draw the grid
-for(var x=0; x<grid.length; x++)
+function update()
 {
-  for(var y=0; y<grid[x].length; y++)
-  {
-    if(grid[x][y] == 1)
-    {
-      context.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
-    }
-  }
+
 }
+
+function draw()
+{
+  grid.draw(context);
+}
+
+draw();
