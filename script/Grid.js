@@ -150,30 +150,26 @@ Grid.prototype.draw = function(context)
   // Draw each tile
   this.eachBlock(function(x, y, block) {
 
-    var opacity = (block.health == Infinity)
-      ? 1
-      : (block.health/block.maxHealth)
-
     switch(block.type)
     {
       case BLOCK_TYPE.FIRE:
-        context.fillStyle = "rgba(214, 30, 30, " + opacity + ")";
+        context.fillStyle = "rgba(214, 30, 30, 1)";
         break;
 
       case BLOCK_TYPE.EARTH:
-        context.fillStyle = "rgba(196, 107, 33, " + opacity + ")";
+        context.fillStyle = "rgba(196, 107, 33, 1)";
         break;
 
       case BLOCK_TYPE.WATER:
-        context.fillStyle = "rgba(33, 104, 196, " + opacity + ")";
+        context.fillStyle = "rgba(33, 104, 196, 1)";
         break;
 
       case BLOCK_TYPE.WIND:
-        context.fillStyle = "rgba(112, 208, 230, " + opacity + ")";
+        context.fillStyle = "rgba(112, 208, 230, 1)";
         break;
 
       default:
-        context.fillStyle = "rgba(1, 1, 1, " + opacity + ")";
+        context.fillStyle = "rgba(1, 1, 1, 1)";
         break;
     }
 
@@ -189,13 +185,6 @@ Grid.prototype.update = function()
 
   this.eachBlock(function(x, y, block) {
 
-    // FIRE and WIND naturally deteriorate
-    if(block.type === BLOCK_TYPE.FIRE || block.type === BLOCK_TYPE.WIND)
-    {
-      block.health--;
-    }
-
-    // Various neighbor block interactions
     self.eachNeighborBlock(x, y, function(neighborX, neighborY, neighborBlock, direction) {
 
       if(direction === NEIGHBOR_DIRECTION.BOTTOM)
@@ -226,13 +215,6 @@ Grid.prototype.update = function()
         return;
       }
 
-      // WATER can erode EARTH
-      if(block.type === BLOCK_TYPE.EARTH && neighborBlock.type === BLOCK_TYPE.WATER)
-      {
-        block.health--;
-        return;
-      }
-
       // WIND can spread FIRE
       if(block.type === BLOCK_TYPE.FIRE && neighborBlock.type === BLOCK_TYPE.WIND)
       {
@@ -242,11 +224,6 @@ Grid.prototype.update = function()
       }
 
     });
-
-    if(block.health <= 0) {
-      self.removeBlock(x, y);
-      return;
-    }
 
     // Gravity
     if(self.canPlaceBlock(x, y + 1))
@@ -258,23 +235,16 @@ Grid.prototype.update = function()
     {
       if(block.type === BLOCK_TYPE.WATER)
       {
-        if(block.spreadTimer <= 0)
+        // Spread right
+        if(self.canPlaceBlock(x + 1, y))
         {
-          // Spread right
-          if(self.canPlaceBlock(x + 1, y))
-          {
-            self.placeBlock(x + 1, y, new Block(BLOCK_TYPE.WATER));
-          }
-
-          // Spread left
-          if(self.canPlaceBlock(x - 1, y))
-          {
-            self.placeBlock(x - 1, y, new Block(BLOCK_TYPE.WATER));
-          }
+          self.placeBlock(x + 1, y, new Block(BLOCK_TYPE.WATER));
         }
-        else
+
+        // Spread left
+        if(self.canPlaceBlock(x - 1, y))
         {
-          block.spreadTimer--;
+          self.placeBlock(x - 1, y, new Block(BLOCK_TYPE.WATER));
         }
       }
     }
