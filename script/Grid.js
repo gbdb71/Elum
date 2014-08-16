@@ -1,9 +1,9 @@
 function Grid()
 {
 
-  this.width = 50;
-  this.height = 25;
-  this.tileSize = 20;
+  this.width = 20;
+  this.height = 10;
+  this.tileSize = 50;
   this.grid = [];
 
   for(var x=0; x<this.width; x++)
@@ -90,26 +90,31 @@ Grid.prototype.draw = function(context)
   // Draw each tile
   this.eachBlock(function(x, y, block) {
 
+    var opacity = (block.health == Infinity)
+      ? 1
+      : (block.health/block.maxHealth)
+
     switch(block.type)
     {
       case BLOCK_TYPE.FIRE:
-        context.fillStyle = "#D61E1E";
+        context.fillStyle = "rgba(214, 30, 30, " + opacity + ")";
         break;
 
       case BLOCK_TYPE.EARTH:
-        context.fillStyle = "#C46B21";
+        context.fillStyle = "rgba(196, 107, 33, " + opacity + ")";
         break;
 
       case BLOCK_TYPE.WATER:
-        context.fillStyle = "#2168C4";
+        context.fillStyle = "rgba(33, 104, 196, " + opacity + ")";
         break;
 
       case BLOCK_TYPE.WIND:
-        context.fillStyle = "#70D0E6";
+        context.fillStyle = "rgba(112, 208, 230, " + opacity + ")";
         break;
 
       default:
-        context.fillStyle = "#000000";
+        context.fillStyle = "rgba(1, 1, 1, " + opacity + ")";
+        break;
     }
 
     context.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
@@ -124,14 +129,23 @@ Grid.prototype.update = function()
 
   this.eachBlock(function(x, y, block) {
 
-    var newX = x;
-    var newY = y + 1;
+    // Natural deterioration
+    if(block.type === BLOCK_TYPE.FIRE
+        || block.type === BLOCK_TYPE.WIND)
+    {
+      block.health--;
 
-    // Move block
-    if(self.canPlaceBlock(newX, newY))
+      if(block.health <= 0) {
+        self.removeBlock(x, y);
+        return;
+      }
+    }
+
+    // Gravity
+    if(self.canPlaceBlock(x, y + 1))
     {
       self.removeBlock(x, y);
-      self.placeBlock(newX, newY, block);
+      self.placeBlock(x, y + 1, block);
     }
 
   });

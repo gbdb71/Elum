@@ -7,5 +7,29 @@ var BLOCK_TYPE = {
 };
 
 function Block(blockType) {
+
   this.type = blockType;
+  this.maxHealth = 0;
+
+  switch(this.type)
+  {
+    case BLOCK_TYPE.WATER:
+      this.maxHealth = Infinity;
+      break;
+
+    case BLOCK_TYPE.EARTH:
+      this.maxHealth = 100;
+      break;
+
+    case BLOCK_TYPE.FIRE:
+      this.maxHealth = 100;
+      break;
+
+    case BLOCK_TYPE.WIND:
+      this.maxHealth = 50;
+      break;
+  }
+
+  this.health = this.maxHealth;
+
 }
