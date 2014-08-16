@@ -1,9 +1,4 @@
 var grid = new Grid();
-grid.addBlock(3, 5, BLOCK_TYPE.FIRE);
-grid.addBlock(8, 9, BLOCK_TYPE.EARTH);
-grid.addBlock(10, 20, BLOCK_TYPE.WIND);
-grid.addBlock(40, 3, BLOCK_TYPE.WATER);
-grid.addBlock(40, 4, BLOCK_TYPE.FIRE);
 
 var canvas = document.getElementById("game");
 var context = canvas.getContext("2d");
@@ -30,10 +25,22 @@ function handleClick(mouseEvent)
   var relativeY = mouseEvent.y - canvas.offsetTop;
 
   var gridCoords = grid.getGridCoordinates(relativeX, relativeY);
-  console.log(gridCoords);
+
+  if(grid.canAddBlock(gridCoords.x, gridCoords.y))
+  {
+    var nextBlockType = getNextBlockType();
+    console.log(nextBlockType);
+    grid.addBlock(gridCoords.x, gridCoords.y, getNextBlockType());
+  }
 }
 
-window.setInterval(loop, 200);
+function getNextBlockType() {
+
+  return Math.floor(Math.random() * 4) + 1;
+
+}
+
+window.setInterval(loop, 100);
 loop();
 
 canvas.addEventListener('click', handleClick, false);
