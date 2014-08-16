@@ -32,6 +32,17 @@ Grid.prototype.removeBlock = function(x, y)
 
 }
 
+Grid.prototype.canAddBlock = function(x, y)
+{
+
+  return (x >= 0)
+          && (x < this.width)
+          && (y >= 0)
+          && (y < this.height)
+          && (this.grid[x][y] == 0);
+
+}
+
 Grid.prototype.eachBlock = function(callback)
 {
   var blocks = [];
@@ -82,9 +93,15 @@ Grid.prototype.update = function()
 
   this.eachBlock(function(x, y) {
 
+    var newX = x;
+    var newY = y + 1;
+
     // Move block
-    self.removeBlock(x, y);
-    self.addBlock(x, y + 1);
+    if(self.canAddBlock(newX, newY))
+    {
+      self.removeBlock(x, y);
+      self.addBlock(newX, newY);
+    }
 
   });
 
