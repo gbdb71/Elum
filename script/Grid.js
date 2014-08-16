@@ -159,13 +159,10 @@ Grid.prototype.update = function()
 
     if(bottomBlock != null)
     {
-      // EARTH smothers FIRE
-      // EARTH crushes WIND
-      if(block.type === BLOCK_TYPE.EARTH &&
-          (
-            bottomBlock.type === BLOCK_TYPE.WIND
-            || bottomBlock.type === BLOCK_TYPE.FIRE)
-          )
+      // EARTH and WATER smother FIRE
+      // EARTH and WATER crush WIND
+      if((block.type === BLOCK_TYPE.EARTH || block.type === BLOCK_TYPE.WATER)
+          && (bottomBlock.type === BLOCK_TYPE.WIND || bottomBlock.type === BLOCK_TYPE.FIRE))
       {
         self.removeBlock(x, y + 1);
       }
