@@ -25,20 +25,30 @@ Grid.prototype.addBlock = function(x, y)
 
 }
 
-Grid.prototype.draw = function(context)
+Grid.prototype.eachBlock = function(callback)
 {
 
-  // Draw the grid
   for(var x=0; x<this.grid.length; x++)
   {
     for(var y=0; y<this.grid[x].length; y++)
     {
       if(this.grid[x][y] == 1)
       {
-        context.fillRect(x * this.tileSize, y * this.tileSize, this.tileSize, this.tileSize);
+        callback(x, y);
       }
     }
   }
+
+}
+
+Grid.prototype.draw = function(context)
+{
+
+  var tileSize = this.tileSize;
+
+  this.eachBlock(function(x, y) {
+    context.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+  });
 
 }
 
@@ -53,7 +63,7 @@ context.fillStyle = "#000000";
 
 function update()
 {
-
+  grid.update();
 }
 
 function draw()
