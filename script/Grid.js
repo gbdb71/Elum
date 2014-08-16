@@ -12,34 +12,34 @@ function Grid()
 
     for(var y=0; y<this.height; y++)
     {
-      this.grid[x][y] = BLOCK_TYPE.EMPTY;
+      this.grid[x][y] = null;
     }
   }
 
 }
 
-Grid.prototype.addBlock = function(x, y, blockType)
+Grid.prototype.placeBlock = function(x, y, block)
 {
 
-  this.grid[x][y] = blockType;
+  this.grid[x][y] = block;
 
 }
 
 Grid.prototype.removeBlock = function(x, y)
 {
 
-  this.grid[x][y] = BLOCK_TYPE.EMPTY;
+  this.grid[x][y] = null;
 
 }
 
-Grid.prototype.canAddBlock = function(x, y)
+Grid.prototype.canPlaceBlock = function(x, y)
 {
 
   return (x >= 0)
           && (x < this.width)
           && (y >= 0)
           && (y < this.height)
-          && (this.grid[x][y] === BLOCK_TYPE.EMPTY);
+          && (this.grid[x][y] === null);
 
 }
 
@@ -51,9 +51,9 @@ Grid.prototype.eachBlock = function(callback)
   {
     for(var y=0; y<this.height; y++)
     {
-      if(this.grid[x][y] != BLOCK_TYPE.EMPTY)
+      if(this.grid[x][y] != null)
       {
-        blocks.push({ x: x, y: y, blockType: this.grid[x][y] });
+        blocks.push({ x: x, y: y, block: this.grid[x][y] });
       }
     }
   }
@@ -65,7 +65,7 @@ Grid.prototype.eachBlock = function(callback)
   for(var i=0; i<blocksCount; i++)
   {
     var currBlock = blocks[i];
-    callback(currBlock.x, currBlock.y, currBlock.blockType);
+    callback(currBlock.x, currBlock.y, currBlock.block);
   }
 
 }
@@ -88,9 +88,9 @@ Grid.prototype.draw = function(context)
   context.fillRect(0, 0, this.width * tileSize, this.height * tileSize);
 
   // Draw each tile
-  this.eachBlock(function(x, y, blockType) {
+  this.eachBlock(function(x, y, block) {
 
-    switch(blockType)
+    switch(block.type)
     {
       case BLOCK_TYPE.FIRE:
         context.fillStyle = "#D61E1E";
@@ -122,16 +122,16 @@ Grid.prototype.update = function()
 
   var self = this;
 
-  this.eachBlock(function(x, y, blockType) {
+  this.eachBlock(function(x, y, block) {
 
     var newX = x;
     var newY = y + 1;
 
     // Move block
-    if(self.canAddBlock(newX, newY))
+    if(self.canPlaceBlock(newX, newY))
     {
       self.removeBlock(x, y);
-      self.addBlock(newX, newY, blockType);
+      self.placeBlock(newX, newY, block);
     }
 
   });

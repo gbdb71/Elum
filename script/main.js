@@ -26,10 +26,11 @@ function handleClick(mouseEvent)
 
   var gridCoords = grid.getGridCoordinates(relativeX, relativeY);
 
-  if(grid.canAddBlock(gridCoords.x, gridCoords.y))
+  if(grid.canPlaceBlock(gridCoords.x, gridCoords.y))
   {
     var nextBlockType = getNextBlockType();
-    grid.addBlock(gridCoords.x, gridCoords.y, getNextBlockType());
+    var nextBlock = new Block(nextBlockType);
+    grid.placeBlock(gridCoords.x, gridCoords.y, nextBlock);
   }
 }
 
