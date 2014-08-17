@@ -8,7 +8,14 @@ module.exports = function(grunt) {
     uglify: {
       minify: {
         files: {
-          'script/elum.min.js': ['script/Block.js', 'script/Grid.js', 'script/Game.js', 'script/main.js']
+          'script/elum.min.js': [
+                                  'script/Levels.js',
+                                  'script/Block.js',
+                                  'script/Grid.js',
+                                  'script/Game.js',
+                                  'script/UserInterface.js',
+                                  'script/main.js'
+                                ]
         }
       }
     },
