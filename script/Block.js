@@ -14,10 +14,6 @@ function Block(blockType, spreadLife) {
   {
     switch(this.type)
     {
-      case BLOCK_TYPE.WATER:
-        this.spreadLife = 5;
-        break;
-
       case BLOCK_TYPE.WIND:
         this.spreadLife = 2;
         break;
