@@ -9,6 +9,7 @@ function Game(canvas)
   this.context = canvas.getContext("2d");
 
   this.grid = null;
+  this.ui = new UserInterface();
 
   this.nextBlockType = BLOCK_TYPE.EARTH;
 
@@ -38,6 +39,7 @@ Game.prototype.draw = function()
   {
     case GAME_STATE.IN_LEVEL:
       this.grid.draw(this.context);
+      this.ui.draw(this.context);
       break;
   }
 }
