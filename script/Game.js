@@ -1,20 +1,12 @@
-var GAME_STATE = {
-  START: 0,
-  IN_LEVEL: 1
-};
-
 function Game(canvas)
 {
   this.canvas = canvas;
   this.context = canvas.getContext("2d");
 
-  this.grid = null;
+  this.grid = new Grid(this);
   this.ui = new UserInterface(this);
 
   this.nextBlockType = BLOCK_TYPE.EARTH;
-
-  this.currentLevel = 0;
-  this.currentState = GAME_STATE.START;
 
   this.tileCounts = [];
   this.tileCounts[BLOCK_TYPE.EARTH] = 0;
@@ -25,27 +17,13 @@ function Game(canvas)
 
 Game.prototype.update = function()
 {
-  switch(this.currentState)
-  {
-    case GAME_STATE.START:
-      this.setUpLevel(this.currentLevel);
-      break;
-
-    case GAME_STATE.IN_LEVEL:
-      this.grid.update();
-      break;
-  }
+  this.grid.update();
 }
 
 Game.prototype.draw = function()
 {
-  switch(this.currentState)
-  {
-    case GAME_STATE.IN_LEVEL:
-      this.grid.draw(this.context);
-      this.ui.draw(this.context);
-      break;
-  }
+    this.grid.draw(this.context);
+    this.ui.draw(this.context);
 }
 
 Game.prototype.start = function()
@@ -101,18 +79,4 @@ Game.prototype.getNextBlockType = function() {
 
 Game.prototype.handleSelectBlockType = function(blockType) {
   this.nextBlockType = blockType;
-}
-
-Game.prototype.handleResetLevel = function(blockType) {
-  this.setUpLevel(this.currentLevel);
-}
-
-Game.prototype.handleWinLevel = function(blockType) {
-  this.setUpLevel(++this.currentLevel);
-}
-
-Game.prototype.setUpLevel = function(levelIndex) {
-  this.grid = new Grid(this);
-  LEVELS[levelIndex](this.grid);
-  this.currentState = GAME_STATE.IN_LEVEL;
 }

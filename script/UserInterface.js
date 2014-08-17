@@ -19,9 +19,6 @@ function UserInterface(game) {
   this.windTileSelectionTopY = 250;
   this.windTileSelectionBottomY = this.windTileSelectionTopY + this.tileSelectionHeight;
 
-  this.resetTileSelectionTopY = 450;
-  this.resetTileSelectionBottomY = this.resetTileSelectionTopY + this.tileSelectionHeight;
-
 };
 
 UserInterface.prototype.handleClick = function(x, y) {
@@ -44,11 +41,6 @@ UserInterface.prototype.handleClick = function(x, y) {
   // WIND Tile Selection?
   if(y > this.windTileSelectionTopY && y < this.windTileSelectionBottomY) {
     this.game.handleSelectBlockType(BLOCK_TYPE.WIND);
-  }
-
-  // Reset tile selection?
-  if(y > this.resetTileSelectionTopY && y < this.resetTileSelectionBottomY) {
-    this.game.handleResetLevel();
   }
 
 };
@@ -107,21 +99,5 @@ UserInterface.prototype.draw = function(context) {
   context.fillStyle = "#FFF";
   context.font = "18px Arial, sans-serif";
   context.fillText(this.game.tileCounts[BLOCK_TYPE.WIND], 1180, 290);
-
-  // Draw level display
-  context.fillStyle = "#FFF";
-  context.font = "15px Arial, sans-serif";
-  context.fillText("level " + this.game.currentLevel, 1020, 340);
-
-  // Draw reset button
-  context.fillStyle = "rgba(255, 255, 255, 0.1)";
-  context.fillRect(1000, this.resetTileSelectionTopY, 200, 50);
-
-  context.fillStyle = "rgba(255, 255, 255, 0.1)";
-  context.fillRect(1000, this.resetTileSelectionTopY, 10, 50);
-
-  context.fillStyle = "#FFF";
-  context.font = "18px Arial, sans-serif";
-  context.fillText("reset", 1030, 480);
 
 };

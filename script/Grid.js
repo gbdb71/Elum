@@ -188,14 +188,8 @@ Grid.prototype.draw = function(context)
 Grid.prototype.update = function()
 {
   var self = this;
-  var noViruses = true;
 
   this.eachBlock(function(x, y, block) {
-
-    if(block.type === BLOCK_TYPE.VIRUS)
-    {
-      noViruses = false;
-    }
 
     self.eachNeighborBlock(x, y, function(neighborX, neighborY, neighborBlock, direction) {
 
@@ -313,9 +307,5 @@ Grid.prototype.update = function()
     }
 
   });
-
-  if(noViruses) {
-    this.game.handleWinLevel();
-  }
 
 }
