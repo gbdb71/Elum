@@ -104,3 +104,9 @@ Game.prototype.getNextBlockType = function() {
 Game.prototype.handleSelectBlockType = function(blockType) {
   this.nextBlockType = blockType;
 }
+
+Game.prototype.handleResetLevel = function(blockType) {
+  this.grid = new Grid();
+  LEVELS[this.currentLevel](this.grid);
+  this.currentState = GAME_STATE.IN_LEVEL;
+}

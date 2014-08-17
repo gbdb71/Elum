@@ -47,7 +47,7 @@ UserInterface.prototype.handleClick = function(x, y) {
   }
 
   // Reset tile selection?
-  if(y > this.windTileSelectionTopY && y < this.windTileSelectionBottomY) {
+  if(y > this.resetTileSelectionTopY && y < this.resetTileSelectionBottomY) {
     this.game.handleResetLevel();
   }
 
