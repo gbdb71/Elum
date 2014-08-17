@@ -193,7 +193,7 @@ Grid.prototype.update = function()
 
   this.eachBlock(function(x, y, block) {
 
-    if(block.type === BLOCK_TYPE.FIRE || block.type === BLOCK_TYPE.WIND)
+    if(block.type === BLOCK_TYPE.FIRE || block.type === BLOCK_TYPE.WIND || block.type === BLOCK_TYPE.WATER)
     {
       block.health--;
     }
@@ -216,12 +216,22 @@ Grid.prototype.update = function()
         }
       }
 
-      if(block.direction != NEIGHBOR_DIRECTION.TOP)
+      if(direction === NEIGHBOR_DIRECTION.BOTTOM)
+      {
+        // WATER consumes other WATER
+        if(block.type === BLOCK_TYPE.WATER && neighborBlock.type === BLOCK_TYPE.WATER)
+        {
+          self.removeBlock(neighborX, neighborY);
+          return;
+        }
+      }
+
+      if(direction != NEIGHBOR_DIRECTION.TOP)
       {
         // WATER consumes any WIND that is not on top of it
         if(block.type === BLOCK_TYPE.WATER && neighborBlock.type === BLOCK_TYPE.WIND)
         {
-          self.removeBlock(neighborX, neighborY);
+          self.removeBlock(x, y);
           return;
         }
       }
@@ -306,20 +316,29 @@ Grid.prototype.update = function()
       else
       {
 
-        // WATER will spread if it can no longer fall due to gravity
-        if(block.type === BLOCK_TYPE.WATER)
+        if(block.spreadLife > 0)
         {
-          // Spread right
-          if(self.canPlaceBlock(x + 1, y))
+
+          var childSpreadLife = block.spreadLife - 1;
+
+          // WATER will spread if it can no longer fall due to gravity
+          if(block.type === BLOCK_TYPE.WATER)
           {
-            self.placeBlock(x + 1, y, new Block(BLOCK_TYPE.WATER));
+            // Spread right
+            if(self.canPlaceBlock(x + 1, y))
+            {
+              self.placeBlock(x + 1, y, new Block(BLOCK_TYPE.WATER, { spreadLife: childSpreadLife }));
+            }
+
+            // Spread left
+            if(self.canPlaceBlock(x - 1, y))
+            {
+              self.placeBlock(x - 1, y, new Block(BLOCK_TYPE.WATER, { spreadLife: childSpreadLife }));
+            }
           }
 
-          // Spread left
-          if(self.canPlaceBlock(x - 1, y))
-          {
-            self.placeBlock(x - 1, y, new Block(BLOCK_TYPE.WATER));
-          }
+          block.spreadLife = 0;
+
         }
 
       }

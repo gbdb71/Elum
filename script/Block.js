@@ -21,8 +21,8 @@ function Block(blockType, options) {
       this.maxHealth = 10;
       break;
 
-    case BLOCK_TYPE.FIRE:
-      this.maxHealth = 100;
+    case BLOCK_TYPE.WATER:
+      this.maxHealth = 70;
       break;
 
     default:
@@ -40,6 +40,10 @@ function Block(blockType, options) {
     {
       case BLOCK_TYPE.WIND:
         this.spreadLife = 2;
+        break;
+
+      case BLOCK_TYPE.WATER:
+        this.spreadLife = 4;
         break;
 
       default:
