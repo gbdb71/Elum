@@ -55,8 +55,7 @@ Game.prototype.start = function()
   var self = this;
 
   self.canvas.addEventListener('click', function(mouseEvent) { self.handleClick(self, mouseEvent) }, false);
-  window.addEventListener('keydown', function(keyboardEvent) { self.handleKeyPress(self, keyboardEvent) }, false);
-
+  
   function loop()
   {
     self.update();
@@ -97,36 +96,6 @@ Game.prototype.handleClick = function(game, mouseEvent)
 
   }
 
-}
-
-Game.prototype.handleKeyPress = function(game, keyboardEvent)
-{
-  switch(keyboardEvent.which)
-  {
-    case 81: // Q
-      game.nextBlockType = BLOCK_TYPE.EARTH;
-      break;
-
-    case 87: // W
-      game.nextBlockType = BLOCK_TYPE.WATER;
-      break;
-
-    case 69: // E
-      game.nextBlockType = BLOCK_TYPE.WIND;
-      break;
-
-    case 82: // R
-      game.nextBlockType = BLOCK_TYPE.FIRE;
-      break;
-
-    case 84: // T
-      game.nextBlockType = BLOCK_TYPE.EMPTY;
-      break;
-
-    default:
-      game.nextBlockType = BLOCK_TYPE.EARTH;
-      break;
-  }
 }
 
 Game.prototype.getNextBlockType = function() {
