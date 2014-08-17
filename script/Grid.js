@@ -198,11 +198,6 @@ Grid.prototype.update = function()
       block.health--;
     }
 
-    if(block.health <= 0)
-    {
-      self.removeBlock(x, y);
-    }
-
     self.eachNeighborBlock(x, y, function(neighborX, neighborY, neighborBlock, direction) {
 
       if(direction === NEIGHBOR_DIRECTION.BOTTOM)
@@ -253,7 +248,19 @@ Grid.prototype.update = function()
         return;
       }
 
+      // WATER erodes EARTH
+      if(block.type === BLOCK_TYPE.EARTH && neighborBlock.type === BLOCK_TYPE.WATER)
+      {
+        block.health--;
+        return;
+      }
+
     });
+
+    if(block.health <= 0)
+    {
+      self.removeBlock(x, y);
+    }
 
     if(block.type === BLOCK_TYPE.WIND)
     {
