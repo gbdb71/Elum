@@ -9,12 +9,18 @@ function Game(canvas)
   this.context = canvas.getContext("2d");
 
   this.grid = null;
-  this.ui = new UserInterface();
+  this.ui = new UserInterface(this);
 
   this.nextBlockType = BLOCK_TYPE.EARTH;
 
   this.currentLevel = 0;
   this.currentState = GAME_STATE.START;
+
+  this.tileCounts = [];
+  this.tileCounts[BLOCK_TYPE.EARTH] = 0;
+  this.tileCounts[BLOCK_TYPE.WATER] = 0;
+  this.tileCounts[BLOCK_TYPE.FIRE] = 0;
+  this.tileCounts[BLOCK_TYPE.WIND] = 0;
 }
 
 Game.prototype.update = function()
@@ -68,14 +74,27 @@ Game.prototype.handleClick = function(game, mouseEvent)
   var relativeX = mouseEvent.x - game.canvas.offsetLeft;
   var relativeY = mouseEvent.y - game.canvas.offsetTop;
 
-  var gridCoords = game.grid.getGridCoordinates(relativeX, relativeY);
-
-  if(game.grid.canPlaceBlock(gridCoords.x, gridCoords.y)
-      && game.grid.hasNeighborBlocks(gridCoords.x, gridCoords.y))
+  if(relativeX > 1000)
   {
-    var nextBlockType = game.getNextBlockType();
-    var nextBlock = new Block(nextBlockType);
-    game.grid.placeBlock(gridCoords.x, gridCoords.y, nextBlock);
+
+    // User has clicked the user interface
+    game.ui.handleClick(relativeX, relativeY);
+
+  }
+  else
+  {
+
+    // User has clicked the grid
+    var gridCoords = game.grid.getGridCoordinates(relativeX, relativeY);
+
+    if(game.grid.canPlaceBlock(gridCoords.x, gridCoords.y)
+        && game.grid.hasNeighborBlocks(gridCoords.x, gridCoords.y))
+    {
+      var nextBlockType = game.getNextBlockType();
+      var nextBlock = new Block(nextBlockType);
+      game.grid.placeBlock(gridCoords.x, gridCoords.y, nextBlock);
+    }
+
   }
 
 }
@@ -112,4 +131,8 @@ Game.prototype.handleKeyPress = function(game, keyboardEvent)
 
 Game.prototype.getNextBlockType = function() {
   return this.nextBlockType;
+}
+
+Game.prototype.handleSelectBlockType = function(blockType) {
+  this.nextBlockType = blockType;
 }
