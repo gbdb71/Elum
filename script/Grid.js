@@ -63,8 +63,22 @@ Grid.prototype.getBlock = function(x, y)
 
 }
 
+Grid.prototype.hasNeighborBlocks = function(x, y)
+{
+
+  var hasNeighbors = false;
+
+  this.eachNeighborBlock(x, y, function() {
+    hasNeighbors = true;
+  });
+
+  return hasNeighbors;
+
+}
+
 Grid.prototype.eachNeighborBlock = function(x, y, callback)
 {
+
   var neighborBlocks = [];
 
   var bottomBlock = this.getBlock(x, y + 1);
@@ -101,6 +115,7 @@ Grid.prototype.eachNeighborBlock = function(x, y, callback)
           currNeighborBlock.direction);
     }
   }
+
 }
 
 Grid.prototype.eachBlock = function(callback)
@@ -197,7 +212,8 @@ Grid.prototype.update = function()
       if(direction === NEIGHBOR_DIRECTION.BOTTOM)
       {
         // EARTH smothers FIRE and crushes WIND beneath it
-        if(block.type === BLOCK_TYPE.EARTH
+        if(!ignoreGravity
+            && block.type === BLOCK_TYPE.EARTH
             && (
                   neighborBlock.type === BLOCK_TYPE.WIND
                   || neighborBlock.type === BLOCK_TYPE.FIRE

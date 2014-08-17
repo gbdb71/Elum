@@ -1,4 +1,5 @@
 var grid = new Grid();
+grid.placeBlock(9, 9, new Block(BLOCK_TYPE.EARTH));
 
 var canvas = document.getElementById("game");
 var context = canvas.getContext("2d");
@@ -26,7 +27,8 @@ function handleClick(mouseEvent)
 
   var gridCoords = grid.getGridCoordinates(relativeX, relativeY);
 
-  if(grid.canPlaceBlock(gridCoords.x, gridCoords.y))
+  if(grid.canPlaceBlock(gridCoords.x, gridCoords.y)
+      && grid.hasNeighborBlocks(gridCoords.x, gridCoords.y))
   {
     var nextBlockType = getNextBlockType();
     var nextBlock = new Block(nextBlockType);
