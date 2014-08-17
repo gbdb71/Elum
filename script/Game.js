@@ -1,20 +1,46 @@
+var GAME_STATE = {
+  START: 0,
+  IN_LEVEL: 1
+};
+
 function Game(canvas)
 {
   this.canvas = canvas;
   this.context = canvas.getContext("2d");
-  this.grid = new Grid();
+
+  this.grid = null;
+
   this.randomBlockEnabled = true;
   this.nextBlockType = BLOCK_TYPE.EMPTY;
+
+  this.currentLevel = 0;
+  this.currentState = GAME_STATE.START;
 }
 
 Game.prototype.update = function()
 {
-  this.grid.update();
+  switch(this.currentState)
+  {
+    case GAME_STATE.START:
+      this.grid = new Grid();
+      LEVELS[this.currentLevel](this.grid);
+      this.currentState = GAME_STATE.IN_LEVEL;
+      break;
+
+    case GAME_STATE.IN_LEVEL:
+      this.grid.update();
+      break;
+  }
 }
 
 Game.prototype.draw = function()
 {
-  this.grid.draw(this.context);
+  switch(this.currentState)
+  {
+    case GAME_STATE.IN_LEVEL:
+      this.grid.draw(this.context);
+      break;
+  }
 }
 
 Game.prototype.start = function()
@@ -48,7 +74,7 @@ Game.prototype.handleClick = function(game, mouseEvent)
   {
     var nextBlockType = game.getNextBlockType();
     var nextBlock = new Block(nextBlockType);
-    grid.placeBlock(gridCoords.x, gridCoords.y, nextBlock);
+    game.grid.placeBlock(gridCoords.x, gridCoords.y, nextBlock);
   }
 
 }
