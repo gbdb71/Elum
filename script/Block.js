@@ -6,8 +6,30 @@ var BLOCK_TYPE = {
   WIND: 4
 };
 
-function Block(blockType) {
+function Block(blockType, spreadLife) {
 
   this.type = blockType;
+
+  if(typeof spreadLife === "undefined")
+  {
+    switch(this.type)
+    {
+      case BLOCK_TYPE.WATER:
+        this.spreadLife = 5;
+        break;
+
+      case BLOCK_TYPE.WIND:
+        this.spreadLife = 2;
+        break;
+
+      default:
+        this.spreadLife = 0;
+        break;
+    }
+  }
+  else
+  {
+    this.spreadLife = spreadLife;
+  }
 
 }

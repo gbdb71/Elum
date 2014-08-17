@@ -225,26 +225,64 @@ Grid.prototype.update = function()
 
     });
 
-    // Gravity
-    if(self.canPlaceBlock(x, y + 1))
+    if(block.type === BLOCK_TYPE.WIND)
     {
-      self.removeBlock(x, y);
-      self.placeBlock(x, y + 1, block);
-    }
-    else
-    {
-      if(block.type === BLOCK_TYPE.WATER)
+      if(block.spreadLife > 0)
       {
+        var childSpreadLife = block.spreadLife - 1;
+
+        // Spread up
+        if(self.canPlaceBlock(x, y - 1))
+        {
+          self.placeBlock(x, y - 1, new Block(BLOCK_TYPE.WIND, childSpreadLife));
+        }
+
+        // Spread down
+        if(self.canPlaceBlock(x, y + 1))
+        {
+          self.placeBlock(x, y + 1, new Block(BLOCK_TYPE.WIND, childSpreadLife));
+        }
+
         // Spread right
         if(self.canPlaceBlock(x + 1, y))
         {
-          self.placeBlock(x + 1, y, new Block(BLOCK_TYPE.WATER));
+          self.placeBlock(x + 1, y, new Block(BLOCK_TYPE.WIND, childSpreadLife));
         }
 
         // Spread left
         if(self.canPlaceBlock(x - 1, y))
         {
-          self.placeBlock(x - 1, y, new Block(BLOCK_TYPE.WATER));
+          self.placeBlock(x - 1, y, new Block(BLOCK_TYPE.WIND, childSpreadLife));
+        }
+
+        block.spreadLife = 0;
+      }
+    }
+    else
+    {
+      // Gravity
+      if(self.canPlaceBlock(x, y + 1))
+      {
+        self.removeBlock(x, y);
+        self.placeBlock(x, y + 1, block);
+      }
+      else
+      {
+
+        // WATER will spread if it can no longer fall due to gravity
+        if(block.type === BLOCK_TYPE.WATER)
+        {
+          // Spread right
+          if(self.canPlaceBlock(x + 1, y))
+          {
+            self.placeBlock(x + 1, y, new Block(BLOCK_TYPE.WATER));
+          }
+
+          // Spread left
+          if(self.canPlaceBlock(x - 1, y))
+          {
+            self.placeBlock(x - 1, y, new Block(BLOCK_TYPE.WATER));
+          }
         }
       }
     }
