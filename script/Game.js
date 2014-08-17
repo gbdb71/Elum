@@ -10,8 +10,7 @@ function Game(canvas)
 
   this.grid = null;
 
-  this.randomBlockEnabled = true;
-  this.nextBlockType = BLOCK_TYPE.EMPTY;
+  this.nextBlockType = BLOCK_TYPE.EARTH;
 
   this.currentLevel = 0;
   this.currentState = GAME_STATE.START;
@@ -84,35 +83,31 @@ Game.prototype.handleKeyPress = function(game, keyboardEvent)
   switch(keyboardEvent.which)
   {
     case 81: // Q
-      game.randomBlockEnabled = false;
       game.nextBlockType = BLOCK_TYPE.EARTH;
       break;
 
     case 87: // W
-      game.randomBlockEnabled = false;
       game.nextBlockType = BLOCK_TYPE.WATER;
       break;
 
     case 69: // E
-      game.randomBlockEnabled = false;
       game.nextBlockType = BLOCK_TYPE.WIND;
       break;
 
     case 82: // R
-      game.randomBlockEnabled = false;
       game.nextBlockType = BLOCK_TYPE.FIRE;
       break;
 
     case 84: // T
-      game.randomBlockEnabled = true;
       game.nextBlockType = BLOCK_TYPE.EMPTY;
+      break;
+
+    default:
+      game.nextBlockType = BLOCK_TYPE.EARTH;
       break;
   }
 }
 
 Game.prototype.getNextBlockType = function() {
-
-  return this.randomBlockEnabled
-    ? Math.floor(Math.random() * 4) + 1
-    : nextBlockType;
+  return this.nextBlockType;
 }
