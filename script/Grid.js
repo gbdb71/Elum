@@ -153,30 +153,32 @@ Grid.prototype.draw = function(context)
   // Draw each tile
   this.eachBlock(function(x, y, block) {
 
+    var opacity = block.health/block.maxHealth;
+
     switch(block.type)
     {
       case BLOCK_TYPE.FIRE:
-        context.fillStyle = "rgba(214, 30, 30, 1)";
+        context.fillStyle = "rgba(214, 30, 30, " + opacity + ")";
         break;
 
       case BLOCK_TYPE.EARTH:
-        context.fillStyle = "rgba(196, 107, 33, 1)";
+        context.fillStyle = "rgba(196, 107, 33, " + opacity + ")";
         break;
 
       case BLOCK_TYPE.WATER:
-        context.fillStyle = "rgba(33, 104, 196, 1)";
+        context.fillStyle = "rgba(33, 104, 196, " + opacity + ")";
         break;
 
       case BLOCK_TYPE.WIND:
-        context.fillStyle = "rgba(112, 208, 230, 1)";
+        context.fillStyle = "rgba(112, 208, 230, " + opacity + ")";
         break;
 
       case BLOCK_TYPE.VIRUS:
-        context.fillStyle = "rgba(77, 168, 37, 1)";
+        context.fillStyle = "rgba(77, 168, 37, " + opacity + ")";
         break;
 
       default:
-        context.fillStyle = "rgba(1, 1, 1, 1)";
+        context.fillStyle = "rgba(1, 1, 1, " + opacity + ")";
         break;
     }
 
@@ -190,6 +192,16 @@ Grid.prototype.update = function()
   var self = this;
 
   this.eachBlock(function(x, y, block) {
+
+    if(block.type === BLOCK_TYPE.FIRE || block.type === BLOCK_TYPE.WIND)
+    {
+      block.health--;
+    }
+
+    if(block.health <= 0)
+    {
+      self.removeBlock(x, y);
+    }
 
     self.eachNeighborBlock(x, y, function(neighborX, neighborY, neighborBlock, direction) {
 
@@ -252,25 +264,25 @@ Grid.prototype.update = function()
         // Spread up
         if(self.canPlaceBlock(x, y - 1))
         {
-          self.placeBlock(x, y - 1, new Block(BLOCK_TYPE.WIND, childSpreadLife));
+          self.placeBlock(x, y - 1, new Block(BLOCK_TYPE.WIND, {spreadLife: childSpreadLife}));
         }
 
         // Spread down
         if(self.canPlaceBlock(x, y + 1))
         {
-          self.placeBlock(x, y + 1, new Block(BLOCK_TYPE.WIND, childSpreadLife));
+          self.placeBlock(x, y + 1, new Block(BLOCK_TYPE.WIND, {spreadLife: childSpreadLife}));
         }
 
         // Spread right
         if(self.canPlaceBlock(x + 1, y))
         {
-          self.placeBlock(x + 1, y, new Block(BLOCK_TYPE.WIND, childSpreadLife));
+          self.placeBlock(x + 1, y, new Block(BLOCK_TYPE.WIND, {spreadLife: childSpreadLife}));
         }
 
         // Spread left
         if(self.canPlaceBlock(x - 1, y))
         {
-          self.placeBlock(x - 1, y, new Block(BLOCK_TYPE.WIND, childSpreadLife));
+          self.placeBlock(x - 1, y, new Block(BLOCK_TYPE.WIND, {spreadLife: childSpreadLife}));
         }
 
         block.spreadLife = 0;

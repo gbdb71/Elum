@@ -7,11 +7,34 @@ var BLOCK_TYPE = {
   VIRUS: 5
 };
 
-function Block(blockType, spreadLife) {
+function Block(blockType, options) {
 
   this.type = blockType;
 
-  if(typeof spreadLife === "undefined")
+  switch(this.type)
+  {
+    case BLOCK_TYPE.FIRE:
+      this.maxHealth = 50;
+      break;
+
+    case BLOCK_TYPE.WIND:
+      this.maxHealth = 10;
+      break;
+
+    case BLOCK_TYPE.FIRE:
+      this.maxHealth = 100;
+      break;
+
+    default:
+      this.maxHealth = 100;
+      break;
+  }
+
+  if(typeof options != "undefined" && typeof options.spreadLife != "undefined")
+  {
+    this.spreadLife = options.spreadLife;
+  }
+  else
   {
     switch(this.type)
     {
@@ -24,9 +47,7 @@ function Block(blockType, spreadLife) {
         break;
     }
   }
-  else
-  {
-    this.spreadLife = spreadLife;
-  }
+
+  this.health = this.maxHealth;
 
 }
