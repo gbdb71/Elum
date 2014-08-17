@@ -28,9 +28,7 @@ Game.prototype.update = function()
   switch(this.currentState)
   {
     case GAME_STATE.START:
-      this.grid = new Grid();
-      LEVELS[this.currentLevel](this.grid);
-      this.currentState = GAME_STATE.IN_LEVEL;
+      this.setUpLevel(this.currentLevel);
       break;
 
     case GAME_STATE.IN_LEVEL:
@@ -106,7 +104,15 @@ Game.prototype.handleSelectBlockType = function(blockType) {
 }
 
 Game.prototype.handleResetLevel = function(blockType) {
-  this.grid = new Grid();
-  LEVELS[this.currentLevel](this.grid);
+  this.setUpLevel(this.currentLevel);
+}
+
+Game.prototype.handleWinLevel = function(blockType) {
+  this.setUpLevel(++this.currentLevel);
+}
+
+Game.prototype.setUpLevel = function(levelIndex) {
+  this.grid = new Grid(this);
+  LEVELS[levelIndex](this.grid);
   this.currentState = GAME_STATE.IN_LEVEL;
 }

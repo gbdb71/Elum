@@ -5,8 +5,9 @@ var NEIGHBOR_DIRECTION = {
   BOTTOM: 3
 };
 
-function Grid()
+function Grid(game)
 {
+  this.game = game;
 
   this.width = 20;
   this.height = 10;
@@ -170,6 +171,10 @@ Grid.prototype.draw = function(context)
         context.fillStyle = "rgba(112, 208, 230, 1)";
         break;
 
+      case BLOCK_TYPE.VIRUS:
+        context.fillStyle = "rgba(77, 168, 37, 1)";
+        break;
+
       default:
         context.fillStyle = "rgba(1, 1, 1, 1)";
         break;
@@ -182,12 +187,15 @@ Grid.prototype.draw = function(context)
 
 Grid.prototype.update = function()
 {
-
   var self = this;
+  var noViruses = true;
 
   this.eachBlock(function(x, y, block) {
 
-    var ignoreGravity = false;
+    if(block.type === BLOCK_TYPE.VIRUS)
+    {
+      noViruses = false;
+    }
 
     self.eachNeighborBlock(x, y, function(neighborX, neighborY, neighborBlock, direction) {
 
@@ -229,6 +237,13 @@ Grid.prototype.update = function()
       {
         self.removeBlock(neighborX, neighborY);
         self.placeBlock(neighborX, neighborY, new Block(BLOCK_TYPE.FIRE));
+        return;
+      }
+
+      // FIRE can kill viruses
+      if(block.type === BLOCK_TYPE.VIRUS && neighborBlock.type === BLOCK_TYPE.FIRE)
+      {
+        self.removeBlock(x, y);
         return;
       }
 
@@ -298,5 +313,9 @@ Grid.prototype.update = function()
     }
 
   });
+
+  if(noViruses) {
+    this.game.handleWinLevel();
+  }
 
 }
