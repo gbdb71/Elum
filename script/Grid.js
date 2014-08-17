@@ -191,7 +191,12 @@ Grid.prototype.update = function()
       {
         // EARTH smothers FIRE and crushes WIND beneath it
         if(block.type === BLOCK_TYPE.EARTH
-            && (neighborBlock.type === BLOCK_TYPE.WIND || neighborBlock.type === BLOCK_TYPE.FIRE))
+            && (
+                  neighborBlock.type === BLOCK_TYPE.WIND
+                  || neighborBlock.type === BLOCK_TYPE.FIRE
+                  || neighborBlock.type === BLOCK_TYPE.WATER
+                )
+          )
         {
           self.removeBlock(x, y + 1);
           return;
