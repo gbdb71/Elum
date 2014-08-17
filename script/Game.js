@@ -55,7 +55,7 @@ Game.prototype.start = function()
   var self = this;
 
   self.canvas.addEventListener('click', function(mouseEvent) { self.handleClick(self, mouseEvent) }, false);
-  
+
   function loop()
   {
     self.update();
@@ -86,8 +86,7 @@ Game.prototype.handleClick = function(game, mouseEvent)
     // User has clicked the grid
     var gridCoords = game.grid.getGridCoordinates(relativeX, relativeY);
 
-    if(game.grid.canPlaceBlock(gridCoords.x, gridCoords.y)
-        && game.grid.hasNeighborBlocks(gridCoords.x, gridCoords.y))
+    if(game.grid.canPlaceBlock(gridCoords.x, gridCoords.y))
     {
       var nextBlockType = game.getNextBlockType();
       var nextBlock = new Block(nextBlockType);

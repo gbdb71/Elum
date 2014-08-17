@@ -63,19 +63,6 @@ Grid.prototype.getBlock = function(x, y)
 
 }
 
-Grid.prototype.hasNeighborBlocks = function(x, y)
-{
-
-  var hasNeighbors = false;
-
-  this.eachNeighborBlock(x, y, function() {
-    hasNeighbors = true;
-  });
-
-  return hasNeighbors;
-
-}
-
 Grid.prototype.eachNeighborBlock = function(x, y, callback)
 {
 
@@ -204,16 +191,10 @@ Grid.prototype.update = function()
 
     self.eachNeighborBlock(x, y, function(neighborX, neighborY, neighborBlock, direction) {
 
-      if(block.type === BLOCK_TYPE.EARTH && neighborBlock.type === BLOCK_TYPE.EARTH)
-      {
-        ignoreGravity = true;
-      }
-
       if(direction === NEIGHBOR_DIRECTION.BOTTOM)
       {
         // EARTH smothers FIRE and crushes WIND beneath it
-        if(!ignoreGravity
-            && block.type === BLOCK_TYPE.EARTH
+        if(block.type === BLOCK_TYPE.EARTH
             && (
                   neighborBlock.type === BLOCK_TYPE.WIND
                   || neighborBlock.type === BLOCK_TYPE.FIRE
@@ -289,7 +270,7 @@ Grid.prototype.update = function()
     else
     {
       // Gravity
-      if(!ignoreGravity && self.canPlaceBlock(x, y + 1))
+      if(self.canPlaceBlock(x, y + 1))
       {
         self.removeBlock(x, y);
         self.placeBlock(x, y + 1, block);
