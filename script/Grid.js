@@ -185,7 +185,14 @@ Grid.prototype.update = function()
 
   this.eachBlock(function(x, y, block) {
 
+    var ignoreGravity = false;
+
     self.eachNeighborBlock(x, y, function(neighborX, neighborY, neighborBlock, direction) {
+
+      if(block.type === BLOCK_TYPE.EARTH && neighborBlock.type === BLOCK_TYPE.EARTH)
+      {
+        ignoreGravity = true;
+      }
 
       if(direction === NEIGHBOR_DIRECTION.BOTTOM)
       {
@@ -266,7 +273,7 @@ Grid.prototype.update = function()
     else
     {
       // Gravity
-      if(self.canPlaceBlock(x, y + 1))
+      if(!ignoreGravity && self.canPlaceBlock(x, y + 1))
       {
         self.removeBlock(x, y);
         self.placeBlock(x, y + 1, block);
@@ -289,6 +296,7 @@ Grid.prototype.update = function()
             self.placeBlock(x - 1, y, new Block(BLOCK_TYPE.WATER));
           }
         }
+
       }
     }
 
