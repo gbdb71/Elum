@@ -14,7 +14,7 @@ function Block(blockType, options) {
   switch(this.type)
   {
     case BLOCK_TYPE.FIRE:
-      this.maxHealth = 50;
+      this.maxHealth = 500;
       break;
 
     case BLOCK_TYPE.WIND:

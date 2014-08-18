@@ -91,7 +91,7 @@ Game.prototype.handleClick = function(game, mouseEvent)
 }
 
 Game.prototype.updateBlockType = function() {
-  this.nextBlockType = Math.floor(Math.random() * 3 + 1);
+  this.nextBlockType = Math.floor(Math.random() * 4 + 1);
   this.ui.nextBlockType = this.nextBlockType;
 }
 

@@ -258,7 +258,7 @@ Grid.prototype.update = function()
       }
 
       // WATER can spread VIRUS
-      if(block.type === BLOCK_TYPE.VIRUS && neighborBlock.type === BLOCK_TYPE.VIRUS)
+      if(block.type === BLOCK_TYPE.VIRUS && neighborBlock.type === BLOCK_TYPE.WATER)
       {
         self.removeBlock(neighborX, neighborY);
         self.placeBlock(neighborX, neighborY, new Block(BLOCK_TYPE.VIRUS));
