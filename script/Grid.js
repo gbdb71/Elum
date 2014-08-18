@@ -261,6 +261,7 @@ Grid.prototype.update = function()
       if(block.type === BLOCK_TYPE.VIRUS && neighborBlock.type === BLOCK_TYPE.FIRE)
       {
         self.removeBlock(x, y);
+        self.removeBlock(neighborX, neighborY);
         return;
       }
 
