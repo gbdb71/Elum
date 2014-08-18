@@ -92,18 +92,28 @@ Block.prototype.draw = function(context, x, y) {
   var tileX = x * this.tileSize;
   var tileY = y * this.tileSize;
 
-  context.beginPath();
-  context.moveTo(tileX, tileY + radius);
-  context.lineTo(tileX, tileY + this.tileSize - radius);
-  context.quadraticCurveTo(tileX, tileY + this.tileSize, tileX + radius, tileY + this.tileSize);
-  context.lineTo(tileX + this.tileSize - radius, tileY + this.tileSize);
-  context.quadraticCurveTo(tileX + this.tileSize, tileY + this.tileSize, tileX + this.tileSize, tileY + this.tileSize - radius);
-  context.lineTo(tileX + this.tileSize, tileY + radius);
-  context.quadraticCurveTo(tileX + this.tileSize, tileY, tileX + this.tileSize - radius, tileY);
-  context.lineTo(tileX + radius, tileY);
-  context.quadraticCurveTo(tileX, tileY, tileX, tileY + radius);
-  context.fill();
+  // Draw tile shape
+  drawRoundedSquare(context, tileX, tileY, radius, this.tileSize);
 
-  //context.fillRect(x * this.tileSize, y * this.tileSize, this.tileSize, this.tileSize);
+  // Draw inner tile shape
+  context.fillStyle = "rgba(1, 1, 1, 0.08)";
+  drawRoundedSquare(context, tileX + 5, tileY + 5, radius, this.tileSize - 10);
 
 };
+
+function drawRoundedSquare(context, x, y, radius, width) {
+
+  // Credit: https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Canvas_tutorial/Drawing_shapes
+  context.beginPath();
+  context.moveTo(x, y + radius);
+  context.lineTo(x, y + width - radius);
+  context.quadraticCurveTo(x, y + width, x + radius, y + width);
+  context.lineTo(x + width - radius, y + width);
+  context.quadraticCurveTo(x + width, y + width, x + width, y + width - radius);
+  context.lineTo(x + width, y + radius);
+  context.quadraticCurveTo(x + width, y, x + width - radius, y);
+  context.lineTo(x + radius, y);
+  context.quadraticCurveTo(x, y, x, y + radius);
+  context.fill();
+
+}
