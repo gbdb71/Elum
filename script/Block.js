@@ -60,6 +60,7 @@ function Block(blockType, options) {
 Block.prototype.draw = function(context, x, y) {
 
   var opacity = this.health/this.maxHealth;
+  opacity = 1;
 
   switch(this.type)
   {
@@ -95,9 +96,16 @@ Block.prototype.draw = function(context, x, y) {
   // Draw tile shape
   drawRoundedSquare(context, tileX, tileY, radius, this.tileSize);
 
-  // Draw inner tile shape
-  context.fillStyle = "rgba(1, 1, 1, 0.08)";
-  drawRoundedSquare(context, tileX + 5, tileY + 5, radius, this.tileSize - 10);
+  if(this.type === BLOCK_TYPE.WATER)
+  {
+    context.fillStyle = "rgba(29, 87, 163, " + opacity + ")";
+    drawRoundedSquare(context, tileX + 5, tileY + 5, radius, this.tileSize - 10);
+
+    context.fillStyle = "rgba(33, 104, 196, " + opacity + ")";
+    context.beginPath();
+    context.arc(tileX + (this.tileSize/2), tileY + (this.tileSize/2), 10, 0, Math.PI * 2, true);
+    context.fill();
+  }
 
 };
 
