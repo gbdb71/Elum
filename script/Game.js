@@ -13,11 +13,28 @@ function Game(canvas)
   this.tileCounts[BLOCK_TYPE.WATER] = 0;
   this.tileCounts[BLOCK_TYPE.FIRE] = 0;
   this.tileCounts[BLOCK_TYPE.WIND] = 0;
+
+  this.virusCounter = 0;
+  this.virusDropInterval = 100;
 }
 
 Game.prototype.update = function()
 {
   this.grid.update();
+
+  this.virusCounter++;
+
+  if(this.virusCounter > this.virusDropInterval)
+  {
+    var virusX = Math.floor(Math.random() * this.grid.width);
+
+    if(this.grid.canPlaceBlock(virusX, 0))
+    {
+      this.grid.placeBlock(virusX, 0, new Block(BLOCK_TYPE.VIRUS));
+    }
+
+    this.virusCounter = 0;
+  }
 }
 
 Game.prototype.draw = function()
