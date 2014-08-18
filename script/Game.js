@@ -6,13 +6,7 @@ function Game(canvas)
   this.grid = new Grid(this);
   this.ui = new UserInterface(this);
 
-  this.nextBlockType = BLOCK_TYPE.EARTH;
-
-  this.tileCounts = [];
-  this.tileCounts[BLOCK_TYPE.EARTH] = 0;
-  this.tileCounts[BLOCK_TYPE.WATER] = 0;
-  this.tileCounts[BLOCK_TYPE.FIRE] = 0;
-  this.tileCounts[BLOCK_TYPE.WIND] = 0;
+  this.nextBlockType;
 
   this.virusCounter = 0;
   this.virusDropInterval = 100;
@@ -55,6 +49,8 @@ Game.prototype.start = function()
     self.draw();
   }
 
+  self.updateBlockType();
+
   window.setInterval(loop, 100);
   loop();
 
@@ -81,19 +77,18 @@ Game.prototype.handleClick = function(game, mouseEvent)
 
     if(game.grid.canPlaceBlock(gridCoords.x, gridCoords.y))
     {
-      var nextBlockType = game.getNextBlockType();
-      var nextBlock = new Block(nextBlockType);
+      var nextBlock = new Block(game.nextBlockType);
       game.grid.placeBlock(gridCoords.x, gridCoords.y, nextBlock);
+
+      // Select a new block
+      game.updateBlockType();
     }
 
   }
 
 }
 
-Game.prototype.getNextBlockType = function() {
-  return this.nextBlockType;
-}
-
-Game.prototype.handleSelectBlockType = function(blockType) {
-  this.nextBlockType = blockType;
+Game.prototype.updateBlockType = function() {
+  this.nextBlockType = Math.floor(Math.random() * 3 + 1);
+  this.ui.nextBlockType = this.nextBlockType;
 }
