@@ -257,6 +257,14 @@ Grid.prototype.update = function()
         return;
       }
 
+      // WATER can spread VIRUS
+      if(block.type === BLOCK_TYPE.VIRUS && neighborBlock.type === BLOCK_TYPE.VIRUS)
+      {
+        self.removeBlock(neighborX, neighborY);
+        self.placeBlock(neighborX, neighborY, new Block(BLOCK_TYPE.VIRUS));
+        return;
+      }
+
       // FIRE can kill viruses
       if(block.type === BLOCK_TYPE.VIRUS && neighborBlock.type === BLOCK_TYPE.FIRE)
       {
