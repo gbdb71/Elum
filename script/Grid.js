@@ -11,8 +11,8 @@ function Grid(game)
 
   this.width = 20;
   this.height = 10;
-  this.tileSize = 50;
   this.grid = [];
+  this.tileSize = 50;
 
   for(var x=0; x<this.width; x++)
   {
@@ -152,37 +152,7 @@ Grid.prototype.draw = function(context)
 
   // Draw each tile
   this.eachBlock(function(x, y, block) {
-
-    var opacity = block.health/block.maxHealth;
-
-    switch(block.type)
-    {
-      case BLOCK_TYPE.FIRE:
-        context.fillStyle = "rgba(214, 30, 30, " + opacity + ")";
-        break;
-
-      case BLOCK_TYPE.EARTH:
-        context.fillStyle = "rgba(196, 107, 33, " + opacity + ")";
-        break;
-
-      case BLOCK_TYPE.WATER:
-        context.fillStyle = "rgba(33, 104, 196, " + opacity + ")";
-        break;
-
-      case BLOCK_TYPE.WIND:
-        context.fillStyle = "rgba(112, 208, 230, " + opacity + ")";
-        break;
-
-      case BLOCK_TYPE.VIRUS:
-        context.fillStyle = "rgba(77, 168, 37, " + opacity + ")";
-        break;
-
-      default:
-        context.fillStyle = "rgba(1, 1, 1, " + opacity + ")";
-        break;
-    }
-
-    context.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+    block.draw(context, x, y);
   });
 
 }

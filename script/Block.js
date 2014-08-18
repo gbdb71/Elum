@@ -10,6 +10,7 @@ var BLOCK_TYPE = {
 function Block(blockType, options) {
 
   this.type = blockType;
+  this.tileSize = 50;
 
   switch(this.type)
   {
@@ -55,3 +56,54 @@ function Block(blockType, options) {
   this.health = this.maxHealth;
 
 }
+
+Block.prototype.draw = function(context, x, y) {
+
+  var opacity = this.health/this.maxHealth;
+
+  switch(this.type)
+  {
+    case BLOCK_TYPE.FIRE:
+      context.fillStyle = "rgba(214, 30, 30, " + opacity + ")";
+      break;
+
+    case BLOCK_TYPE.EARTH:
+      context.fillStyle = "rgba(196, 107, 33, " + opacity + ")";
+      break;
+
+    case BLOCK_TYPE.WATER:
+      context.fillStyle = "rgba(33, 104, 196, " + opacity + ")";
+      break;
+
+    case BLOCK_TYPE.WIND:
+      context.fillStyle = "rgba(112, 208, 230, " + opacity + ")";
+      break;
+
+    case BLOCK_TYPE.VIRUS:
+      context.fillStyle = "rgba(77, 168, 37, " + opacity + ")";
+      break;
+
+    default:
+      context.fillStyle = "rgba(1, 1, 1, " + opacity + ")";
+      break;
+  }
+
+  var radius = 8;
+  var tileX = x * this.tileSize;
+  var tileY = y * this.tileSize;
+
+  context.beginPath();
+  context.moveTo(tileX, tileY + radius);
+  context.lineTo(tileX, tileY + this.tileSize - radius);
+  context.quadraticCurveTo(tileX, tileY + this.tileSize, tileX + radius, tileY + this.tileSize);
+  context.lineTo(tileX + this.tileSize - radius, tileY + this.tileSize);
+  context.quadraticCurveTo(tileX + this.tileSize, tileY + this.tileSize, tileX + this.tileSize, tileY + this.tileSize - radius);
+  context.lineTo(tileX + this.tileSize, tileY + radius);
+  context.quadraticCurveTo(tileX + this.tileSize, tileY, tileX + this.tileSize - radius, tileY);
+  context.lineTo(tileX + radius, tileY);
+  context.quadraticCurveTo(tileX, tileY, tileX, tileY + radius);
+  context.fill();
+
+  //context.fillRect(x * this.tileSize, y * this.tileSize, this.tileSize, this.tileSize);
+
+};
