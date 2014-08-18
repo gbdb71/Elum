@@ -8,17 +8,19 @@ function Game(canvas)
 
   this.nextBlockType;
 
-  this.virusCounter = 0;
+  this.virusTimer = 0;
   this.virusDropInterval = 100;
+
+  this.currentToxicity = 0;
 }
 
 Game.prototype.update = function()
 {
   this.grid.update();
 
-  this.virusCounter++;
+  this.virusTimer++;
 
-  if(this.virusCounter > this.virusDropInterval)
+  if(this.virusTimer > this.virusDropInterval)
   {
     var virusX = Math.floor(Math.random() * this.grid.width);
 
@@ -27,7 +29,7 @@ Game.prototype.update = function()
       this.grid.placeBlock(virusX, 0, new Block(BLOCK_TYPE.VIRUS));
     }
 
-    this.virusCounter = 0;
+    this.virusTimer = 0;
   }
 }
 
@@ -91,4 +93,19 @@ Game.prototype.handleClick = function(game, mouseEvent)
 Game.prototype.updateBlockType = function() {
   this.nextBlockType = Math.floor(Math.random() * 3 + 1);
   this.ui.nextBlockType = this.nextBlockType;
+}
+
+Game.prototype.updateVirusCount = function(virusCount) {
+
+  this.currentToxicity = Math.floor((virusCount/20) * 100);
+
+  if(this.currentToxicity >= 100)
+  {
+    this.handleLose();
+  }
+
+}
+
+Game.prototype.handleLose = function() {
+  console.log("LOSE CONDITION");
 }

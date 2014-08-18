@@ -190,8 +190,14 @@ Grid.prototype.draw = function(context)
 Grid.prototype.update = function()
 {
   var self = this;
+  var virusCount = 0;
 
   this.eachBlock(function(x, y, block) {
+
+    if(block.type === BLOCK_TYPE.VIRUS)
+    {
+      virusCount++;
+    }
 
     if(block.type === BLOCK_TYPE.FIRE || block.type === BLOCK_TYPE.WIND || block.type === BLOCK_TYPE.WATER)
     {
@@ -345,5 +351,7 @@ Grid.prototype.update = function()
     }
 
   });
+
+  this.game.updateVirusCount(virusCount);
 
 }

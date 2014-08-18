@@ -58,6 +58,10 @@ UserInterface.prototype.draw = function(context) {
 
   context.fillStyle = "#FFF";
   context.font = "16px Arial, sans-serif";
-  context.fillText("next: " + tileName, 1020, 140);
+  context.fillText(tileName, 1020, 140);
+
+  context.fillStyle = "#FFF";
+  context.font = "14px Arial, sans-serif";
+  context.fillText("toxicity " + this.game.currentToxicity + "%", 1020, 190);
 
 };
