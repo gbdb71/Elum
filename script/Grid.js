@@ -164,6 +164,19 @@ Grid.prototype.update = function()
 
   this.eachBlock(function(x, y, block) {
 
+    block.update();
+
+    if(block.isDead)
+    {
+      self.removeBlock(x, y);
+      return;
+    }
+
+    if(block.isDying)
+    {
+      return;
+    }
+
     if(block.type === BLOCK_TYPE.VIRUS)
     {
       virusCount++;
@@ -176,6 +189,11 @@ Grid.prototype.update = function()
 
     self.eachNeighborBlock(x, y, function(neighborX, neighborY, neighborBlock, direction) {
 
+      if(neighborBlock.isDead || neighborBlock.isDying)
+      {
+        return;
+      }
+
       if(direction === NEIGHBOR_DIRECTION.BOTTOM)
       {
         // EARTH smothers FIRE and crushes WIND beneath it
@@ -187,7 +205,7 @@ Grid.prototype.update = function()
                 )
           )
         {
-          self.removeBlock(x, y + 1);
+          neighborBlock.kill();
           return;
         }
       }
@@ -197,7 +215,7 @@ Grid.prototype.update = function()
         // WATER consumes other WATER
         if(block.type === BLOCK_TYPE.WATER && neighborBlock.type === BLOCK_TYPE.WATER)
         {
-          self.removeBlock(neighborX, neighborY);
+          neighborBlock.kill();
           return;
         }
       }
@@ -207,7 +225,7 @@ Grid.prototype.update = function()
         // WATER consumes any WIND that is not on top of it
         if(block.type === BLOCK_TYPE.WATER && neighborBlock.type === BLOCK_TYPE.WIND)
         {
-          self.removeBlock(x, y);
+          neighborBlock.kill();
           return;
         }
       }
@@ -215,7 +233,7 @@ Grid.prototype.update = function()
       // WATER smothers any FIRE near it
       if(block.type === BLOCK_TYPE.WATER && neighborBlock.type === BLOCK_TYPE.FIRE)
       {
-        self.removeBlock(neighborX, neighborY);
+        neighborBlock.kill();
         return;
       }
 
@@ -238,8 +256,8 @@ Grid.prototype.update = function()
       // FIRE can kill viruses
       if(block.type === BLOCK_TYPE.VIRUS && neighborBlock.type === BLOCK_TYPE.FIRE)
       {
-        self.removeBlock(x, y);
-        self.removeBlock(neighborX, neighborY);
+        block.kill();
+        neighborBlock.kill();
         return;
       }
 

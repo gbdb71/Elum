@@ -11,6 +11,9 @@ function Block(blockType, options) {
 
   this.type = blockType;
   this.tileSize = 50;
+  this.isDying = false;
+  this.isDead = false;
+  this.deathClock = 5;
 
   switch(this.type)
   {
@@ -57,6 +60,22 @@ function Block(blockType, options) {
 
 }
 
+Block.prototype.kill = function() {
+  this.isDying = true;
+}
+
+Block.prototype.update = function() {
+  if(this.isDying)
+  {
+    this.deathClock--;
+
+    if(this.deathClock <= 0)
+    {
+      this.isDead = true;
+    }
+  }
+}
+
 Block.prototype.draw = function(context, x, y) {
 
   var opacity = 1;
@@ -66,9 +85,10 @@ Block.prototype.draw = function(context, x, y) {
   {
     opacity = 0.9;
   }
-  else
+
+  if(this.isDying && this.deathClock%2 == 0)
   {
-    opacity = 1;
+    opacity = 0.1;
   }
 
   switch(this.type)
