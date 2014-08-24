@@ -92,6 +92,7 @@ Block.prototype.draw = function(context, x, y) {
   var radius = 8;
   var tileX = x * this.tileSize;
   var tileY = y * this.tileSize;
+  var tileMiddleX = tileX + (this.tileSize/2);
 
   // Draw tile shape
   drawRoundedSquare(context, tileX, tileY, radius, this.tileSize);
@@ -103,25 +104,38 @@ Block.prototype.draw = function(context, x, y) {
 
     context.fillStyle = "rgba(33, 104, 196, " + opacity + ")";
     context.beginPath();
-    context.arc(tileX + (this.tileSize/2), tileY + (this.tileSize/2), 10, 0, Math.PI * 2, true);
+    context.arc(tileMiddleX, tileY + (this.tileSize/2), 10, 0, Math.PI * 2, true);
+    context.fill();
+  }
+
+  if(this.type === BLOCK_TYPE.FIRE)
+  {
+    context.fillStyle = "rgba(184, 26, 26, " + opacity + ")";
+    drawRoundedSquare(context, tileX + 5, tileY + 5, radius, this.tileSize - 10);
+
+    context.fillStyle = "rgba(214, 30, 30, " + opacity + ")";
+    context.beginPath();
+    context.moveTo(tileMiddleX, tileY + 15);
+    context.lineTo(tileX + 15, tileY + this.tileSize - 15);
+    context.lineTo(tileX + this.tileSize - 15, tileY + this.tileSize - 15);
     context.fill();
   }
 
 };
 
-function drawRoundedSquare(context, x, y, radius, width) {
+function drawRoundedSquare(context, x, y, borderRadius, width) {
 
   // Credit: https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Canvas_tutorial/Drawing_shapes
   context.beginPath();
-  context.moveTo(x, y + radius);
-  context.lineTo(x, y + width - radius);
-  context.quadraticCurveTo(x, y + width, x + radius, y + width);
-  context.lineTo(x + width - radius, y + width);
-  context.quadraticCurveTo(x + width, y + width, x + width, y + width - radius);
-  context.lineTo(x + width, y + radius);
-  context.quadraticCurveTo(x + width, y, x + width - radius, y);
-  context.lineTo(x + radius, y);
-  context.quadraticCurveTo(x, y, x, y + radius);
+  context.moveTo(x, y + borderRadius);
+  context.lineTo(x, y + width - borderRadius);
+  context.quadraticCurveTo(x, y + width, x + borderRadius, y + width);
+  context.lineTo(x + width - borderRadius, y + width);
+  context.quadraticCurveTo(x + width, y + width, x + width, y + width - borderRadius);
+  context.lineTo(x + width, y + borderRadius);
+  context.quadraticCurveTo(x + width, y, x + width - borderRadius, y);
+  context.lineTo(x + borderRadius, y);
+  context.quadraticCurveTo(x, y, x, y + borderRadius);
   context.fill();
 
 }
