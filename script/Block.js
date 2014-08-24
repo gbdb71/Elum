@@ -141,6 +141,26 @@ Block.prototype.draw = function(context, x, y) {
     context.fillRect(tileX + 10, tileY + 33, 30, 5);
   }
 
+  if(this.type === BLOCK_TYPE.VIRUS)
+  {
+    context.fillStyle = "rgba(64, 138, 32, " + opacity + ")";
+    drawRoundedSquare(context, tileX + 5, tileY + 5, radius, this.tileSize - 10);
+
+    context.fillStyle = "rgba(72, 156, 36, " + opacity + ")";
+
+    context.save();
+    context.translate(tileX + 15, tileY + 10);
+    context.rotate(Math.PI/4);
+    context.fillRect(0, 0, 35, 8);
+    context.restore();
+
+    context.save();
+    context.translate(tileX + 10, tileY + this.tileSize - 15);
+    context.rotate(-Math.PI/4);
+    context.fillRect(0, 0, 35, 8);
+    context.restore();
+  }
+
 };
 
 function drawRoundedSquare(context, x, y, borderRadius, width) {
