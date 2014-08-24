@@ -130,6 +130,17 @@ Block.prototype.draw = function(context, x, y) {
     drawRoundedSquare(context, tileX + 15, tileY + 15, 4, this.tileSize - 30);
   }
 
+  if(this.type === BLOCK_TYPE.WIND)
+  {
+    context.fillStyle = "rgba(123, 216, 237, " + opacity + ")";
+    drawRoundedSquare(context, tileX + 5, tileY + 5, radius, this.tileSize - 10);
+
+    context.fillStyle = "rgba(112, 208, 230, " + opacity + ")";
+    context.fillRect(tileX + 10, tileY + 13, 30, 5);
+    context.fillRect(tileX + 10, tileY + 23, 30, 5);
+    context.fillRect(tileX + 10, tileY + 33, 30, 5);
+  }
+
 };
 
 function drawRoundedSquare(context, x, y, borderRadius, width) {
