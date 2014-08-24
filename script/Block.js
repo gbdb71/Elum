@@ -121,6 +121,15 @@ Block.prototype.draw = function(context, x, y) {
     context.fill();
   }
 
+  if(this.type === BLOCK_TYPE.EARTH)
+  {
+    context.fillStyle = "rgba(168, 93, 30, " + opacity + ")";
+    drawRoundedSquare(context, tileX + 5, tileY + 5, radius, this.tileSize - 10);
+
+    context.fillStyle = "rgba(196, 107, 33, " + opacity + ")";
+    drawRoundedSquare(context, tileX + 15, tileY + 15, 4, this.tileSize - 30);
+  }
+
 };
 
 function drawRoundedSquare(context, x, y, borderRadius, width) {
