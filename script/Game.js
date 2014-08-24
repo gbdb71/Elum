@@ -1,3 +1,8 @@
+var GAME_STATE = {
+  PLAYING: 1,
+  PAUSED: 2
+};
+
 function Game(canvas)
 {
   this.canvas = canvas;
@@ -12,31 +17,39 @@ function Game(canvas)
   this.virusDropInterval = 100;
 
   this.currentToxicity = 0;
+
+  this.currentState = GAME_STATE.PLAYING;
 }
 
 Game.prototype.update = function()
 {
-  this.grid.update();
-
-  this.virusTimer++;
-
-  if(this.virusTimer > this.virusDropInterval)
+  if(this.currentState === GAME_STATE.PLAYING)
   {
-    var virusX = Math.floor(Math.random() * this.grid.width);
+    this.grid.update();
 
-    if(this.grid.canPlaceBlock(virusX, 0))
+    this.virusTimer++;
+
+    if(this.virusTimer > this.virusDropInterval)
     {
-      this.grid.placeBlock(virusX, 0, new Block(BLOCK_TYPE.VIRUS));
-    }
+      var virusX = Math.floor(Math.random() * this.grid.width);
 
-    this.virusTimer = 0;
+      if(this.grid.canPlaceBlock(virusX, 0))
+      {
+        this.grid.placeBlock(virusX, 0, new Block(BLOCK_TYPE.VIRUS));
+      }
+
+      this.virusTimer = 0;
+    }
   }
 }
 
 Game.prototype.draw = function()
 {
+  if(this.currentState === GAME_STATE.PLAYING)
+  {
     this.grid.draw(this.context);
     this.ui.draw(this.context);
+  }
 }
 
 Game.prototype.start = function()
@@ -56,10 +69,18 @@ Game.prototype.start = function()
   window.setInterval(loop, 100);
   loop();
 
+  this.displayMessage("assignment 001", "Place 10 EARTH blocks");
+
 }
 
 Game.prototype.handleClick = function(game, mouseEvent)
 {
+
+  if(this.currentState === GAME_STATE.PAUSED)
+  {
+    this.currentState = GAME_STATE.PLAYING;
+    return;
+  }
 
   var relativeX = mouseEvent.x - game.canvas.offsetLeft;
   var relativeY = mouseEvent.y - game.canvas.offsetTop;
@@ -108,4 +129,24 @@ Game.prototype.updateVirusCount = function(virusCount) {
 
 Game.prototype.handleLose = function() {
   console.log("LOSE CONDITION");
+}
+
+Game.prototype.displayMessage = function(modalTitle, modalText) {
+
+  this.currentState = GAME_STATE.PAUSED;
+
+  this.context.fillStyle = "rgba(0, 0, 0, 0.5)";
+  this.context.fillRect(0, 0, 1000, 500);
+
+  this.context.fillStyle = "#111";
+  this.context.fillRect(0, 150, 1000, 200);
+
+  this.context.fillStyle = "#777";
+  this.context.font = "30px Arial, sans-serif";
+  this.context.fillText(modalTitle, 50, 200);
+
+  this.context.fillStyle = "#FFF";
+  this.context.font = "20px Arial, sans-serif";
+  this.context.fillText(modalText, 50, 240);
+
 }
