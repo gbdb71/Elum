@@ -59,8 +59,17 @@ function Block(blockType, options) {
 
 Block.prototype.draw = function(context, x, y) {
 
-  var opacity = this.health/this.maxHealth;
-  opacity = 1;
+  var opacity = 1;
+  var healthPercentage = Math.floor((this.health/this.maxHealth) * 100);
+
+  if(healthPercentage < 30 && healthPercentage%2 == 0)
+  {
+    opacity = 0.9;
+  }
+  else
+  {
+    opacity = 1;
+  }
 
   switch(this.type)
   {
