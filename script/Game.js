@@ -57,6 +57,7 @@ Game.prototype.start = function()
   var self = this;
 
   self.canvas.addEventListener('click', function(mouseEvent) { self.handleClick(self, mouseEvent) }, false);
+  self.canvas.addEventListener('mousemove', function(mouseEvent) { self.handleMouseMove(self, mouseEvent) }, false);
 
   function loop()
   {
@@ -108,6 +109,36 @@ Game.prototype.handleClick = function(game, mouseEvent)
     }
 
   }
+
+}
+
+Game.prototype.handleMouseMove = function(game, mouseEvent)
+{
+
+  if(this.currentState === GAME_STATE.PAUSED)
+  {
+    this.currentState = GAME_STATE.PLAYING;
+    return;
+  }
+
+  var relativeX = mouseEvent.x - game.canvas.offsetLeft;
+  var relativeY = mouseEvent.y - game.canvas.offsetTop;
+
+  if(relativeX <= 1000)
+  {
+
+    // User has clicked the grid
+    var gridCoords = game.grid.getGridCoordinates(relativeX, relativeY);
+
+    if(game.grid.canPlaceBlock(gridCoords.x, gridCoords.y))
+    {
+      game.grid.addPlaceholder(gridCoords.x, gridCoords.y);
+      return;
+    }
+
+  }
+
+  game.grid.removePlaceholder();
 
 }
 

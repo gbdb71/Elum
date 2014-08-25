@@ -7,6 +7,8 @@ var NEIGHBOR_DIRECTION = {
 
 function Grid(game)
 {
+  this.placeholderCoords = null;
+
   this.game = game;
 
   this.width = 20;
@@ -62,6 +64,19 @@ Grid.prototype.getBlock = function(x, y)
 
   return (this.isValidTile(x, y)) ? this.grid[x][y] : null;
 
+}
+
+Grid.prototype.addPlaceholder = function(x, y)
+{
+  if(this.isValidTile(x, y))
+  {
+    this.placeholderCoords = { x: x, y: y };
+  }
+}
+
+Grid.prototype.removePlaceholder = function(x, y)
+{
+  this.placeholderCoords = null;
 }
 
 Grid.prototype.eachNeighborBlock = function(x, y, callback)
@@ -149,6 +164,12 @@ Grid.prototype.draw = function(context)
   // Clear the grid
   context.fillStyle = "#FFFFFF";
   context.fillRect(0, 0, this.width * tileSize, this.height * tileSize);
+
+  if(this.placeholderCoords != null)
+  {
+    context.fillStyle = "#EEE";
+    drawRoundedSquare(context, this.placeholderCoords.x * tileSize, this.placeholderCoords.y * tileSize, 8, tileSize);
+  }
 
   // Draw each tile
   this.eachBlock(function(x, y, block) {
