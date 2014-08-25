@@ -12,33 +12,41 @@ function Game(canvas)
   this.ui = new UserInterface(this);
 
   this.nextBlockType;
+  this.placeableBlocks = [BLOCK_TYPE.EARTH];
 
+  this.virusesEnabled = false;
   this.virusTimer = 0;
-  this.virusDropInterval = 100;
+  this.virusDropInterval = 20;
 
   this.currentToxicity = 0;
 
   this.currentState = GAME_STATE.PLAYING;
+
+  this.currentLevel = 0;
 }
 
 Game.prototype.update = function()
 {
   if(this.currentState === GAME_STATE.PLAYING)
   {
-    this.grid.update();
+    var stats = this.grid.update();
+    this.checkLevelProgress(stats);
 
-    this.virusTimer++;
-
-    if(this.virusTimer > this.virusDropInterval)
+    if(this.virusesEnabled)
     {
-      var virusX = Math.floor(Math.random() * this.grid.width);
+      this.virusTimer++;
 
-      if(this.grid.canPlaceBlock(virusX, 0))
+      if(this.virusTimer > this.virusDropInterval)
       {
-        this.grid.placeBlock(virusX, 0, new Block(BLOCK_TYPE.VIRUS));
-      }
+        var virusX = Math.floor(Math.random() * this.grid.width);
 
-      this.virusTimer = 0;
+        if(this.grid.canPlaceBlock(virusX, 0))
+        {
+          this.grid.placeBlock(virusX, 0, new Block(BLOCK_TYPE.VIRUS));
+        }
+
+        this.virusTimer = 0;
+      }
     }
   }
 }
@@ -69,8 +77,6 @@ Game.prototype.start = function()
 
   window.setInterval(loop, 100);
   loop();
-
-  this.displayMessage("assignment 001", "Place 10 EARTH blocks");
 
 }
 
@@ -117,7 +123,6 @@ Game.prototype.handleMouseMove = function(game, mouseEvent)
 
   if(this.currentState === GAME_STATE.PAUSED)
   {
-    this.currentState = GAME_STATE.PLAYING;
     return;
   }
 
@@ -143,8 +148,20 @@ Game.prototype.handleMouseMove = function(game, mouseEvent)
 }
 
 Game.prototype.updateBlockType = function() {
-  this.nextBlockType = Math.floor(Math.random() * 4 + 1);
-  this.ui.nextBlockType = this.nextBlockType;
+
+  var nextBlockType;
+
+  if(this.placeableBlocks.length == 1)
+  {
+    nextBlockType = BLOCK_TYPE.EARTH;
+  }
+  else
+  {
+    nextBlockType = this.placeableBlocks[Math.floor(Math.random() * this.placeableBlocks.length)];
+  }
+
+  this.nextBlockType = this.ui.nextBlockType = nextBlockType;
+
 }
 
 Game.prototype.updateVirusCount = function(virusCount) {
@@ -159,7 +176,6 @@ Game.prototype.updateVirusCount = function(virusCount) {
 }
 
 Game.prototype.handleLose = function() {
-  console.log("LOSE CONDITION");
 }
 
 Game.prototype.displayMessage = function(modalTitle, modalText) {
@@ -179,5 +195,53 @@ Game.prototype.displayMessage = function(modalTitle, modalText) {
   this.context.fillStyle = "#FFF";
   this.context.font = "20px Arial, sans-serif";
   this.context.fillText(modalText, 50, 240);
+
+}
+
+Game.prototype.checkLevelProgress = function(stats) {
+
+  // Level 0: Pre-Start
+  if(this.currentLevel == 0)
+  {
+    this.currentLevel++;
+    return;
+  }
+
+  // Level 1: Start Game
+  if(this.currentLevel == 1)
+  {
+    this.currentLevel++;
+    this.displayMessage("assignment 001", "Place 10 EARTH blocks");
+    return;
+  }
+
+  // Level 2: Place 10 EARTH blocks
+  if(this.currentLevel == 2)
+  {
+    if(stats.blockCounts[BLOCK_TYPE.EARTH] > 10)
+    {
+      this.currentLevel++;
+      this.displayMessage("assignment 002", "You've unlocked FIRE! Place 5 FIRE blocks");
+      this.placeableBlocks.push(BLOCK_TYPE.FIRE);
+      return;
+    }
+
+    return;
+  }
+
+  // Level 3: Place 10 FIRE blocks
+  if(this.currentLevel == 3)
+  {
+    if(stats.blockCounts[BLOCK_TYPE.FIRE] > 5)
+    {
+      this.currentLevel++;
+      this.displayMessage("assignment 003", "VIRUSES are invading! Burn 5 VIRUSES with FIRE!");
+      this.virusesEnabled = true;
+      this.virusTimer = this.virusDropInterval + 1;
+      return;
+    }
+
+    return;
+  }
 
 }
