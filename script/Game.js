@@ -1,6 +1,7 @@
 var GAME_STATE = {
   PLAYING: 1,
-  PAUSED: 2
+  PAUSED: 2,
+  GAME_OVER: 3
 };
 
 function Game(canvas)
@@ -16,7 +17,7 @@ function Game(canvas)
 
   this.virusesEnabled = false;
   this.virusTimer = 0;
-  this.virusDropInterval = 20;
+  this.virusDropInterval = 30;
 
   this.currentToxicity = 0;
 
@@ -31,6 +32,12 @@ Game.prototype.update = function()
   {
     var stats = this.grid.update();
     this.checkLevelProgress(stats);
+
+    if(stats.blockCounts[BLOCK_TYPE.VIRUS] > 20)
+    {
+      this.currentState = GAME_STATE.GAME_OVER;
+      return;
+    }
 
     if(this.virusesEnabled)
     {
@@ -221,7 +228,7 @@ Game.prototype.checkLevelProgress = function(stats) {
     if(stats.blockCounts[BLOCK_TYPE.EARTH] >= 10)
     {
       this.currentLevel++;
-      this.displayMessage("assignment 002", "You've unlocked FIRE! Place 5 FIRE blocks");
+      this.displayMessage("assignment 002", "You've unlocked FIRE! Get 5 fires burning at once");
       this.placeableBlocks.push(BLOCK_TYPE.FIRE);
       return;
     }

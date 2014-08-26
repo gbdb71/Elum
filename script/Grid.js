@@ -189,6 +189,7 @@ Grid.prototype.update = function()
   stats.blockCounts = {};
   stats.blockCounts[BLOCK_TYPE.EARTH] = 0;
   stats.blockCounts[BLOCK_TYPE.FIRE] = 0;
+  stats.blockCounts[BLOCK_TYPE.VIRUS] = 0;
 
   this.eachBlock(function(x, y, block) {
 
