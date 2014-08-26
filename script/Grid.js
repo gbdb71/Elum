@@ -26,6 +26,9 @@ function Grid(game)
     }
   }
 
+  this.globalStats = {};
+  this.globalStats.burnedVirusCount = 0;
+
 }
 
 Grid.prototype.placeBlock = function(x, y, block)
@@ -275,9 +278,10 @@ Grid.prototype.update = function()
         return;
       }
 
-      // FIRE can kill viruses
+      // FIRE can burn viruses
       if(block.type === BLOCK_TYPE.VIRUS && neighborBlock.type === BLOCK_TYPE.FIRE)
       {
+        self.globalStats.burnedVirusCount++;
         block.kill();
         neighborBlock.kill();
         return;
@@ -371,6 +375,7 @@ Grid.prototype.update = function()
 
   });
 
+  stats.burnedVirusCount = this.globalStats.burnedVirusCount;
   return stats;
 
 }

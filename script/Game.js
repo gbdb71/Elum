@@ -218,7 +218,7 @@ Game.prototype.checkLevelProgress = function(stats) {
   // Level 2: Place 10 EARTH blocks
   if(this.currentLevel == 2)
   {
-    if(stats.blockCounts[BLOCK_TYPE.EARTH] > 10)
+    if(stats.blockCounts[BLOCK_TYPE.EARTH] >= 10)
     {
       this.currentLevel++;
       this.displayMessage("assignment 002", "You've unlocked FIRE! Place 5 FIRE blocks");
@@ -232,7 +232,7 @@ Game.prototype.checkLevelProgress = function(stats) {
   // Level 3: Place 10 FIRE blocks
   if(this.currentLevel == 3)
   {
-    if(stats.blockCounts[BLOCK_TYPE.FIRE] > 5)
+    if(stats.blockCounts[BLOCK_TYPE.FIRE] >= 5)
     {
       this.currentLevel++;
       this.displayMessage("assignment 003", "VIRUSES are invading! Burn 5 VIRUSES with FIRE!");
@@ -242,6 +242,17 @@ Game.prototype.checkLevelProgress = function(stats) {
     }
 
     return;
+  }
+
+  // Level 4: Erode 5 EARTH blocks with WATER
+  if(this.currentLevel == 4)
+  {
+    if(stats.burnedVirusCount >= 5)
+    {
+      this.currentLevel++;
+      this.displayMessage("assignment 004", "You've unlocked WATER! Erode 5 EARTH blocks with WATER");
+      this.placeableBlocks.push(BLOCK_TYPE.WATER);
+    }
   }
 
 }
