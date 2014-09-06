@@ -25,6 +25,8 @@ function Game(canvas)
   this.currentState = GAME_STATE.PLAYING;
 
   this.currentLevel = 0;
+
+  this.currentGoal = "";
 }
 
 Game.prototype.update = function()
@@ -224,6 +226,7 @@ Game.prototype.checkLevelProgress = function(stats) {
   if(this.currentLevel == 1)
   {
     this.currentLevel++;
+    this.currentGoal = "Place 10 EARTH";
     this.displayMessage("assignment 001", "Place 10 EARTH blocks");
     return;
   }
@@ -234,6 +237,7 @@ Game.prototype.checkLevelProgress = function(stats) {
     if(stats.blockCounts[BLOCK_TYPE.EARTH] >= 10)
     {
       this.currentLevel++;
+      this.currentGoal = "Place 5 FIRE";
       this.displayMessage("assignment 002", "You've unlocked FIRE! Get 5 fires burning at once");
       this.placeableBlocks.push(BLOCK_TYPE.FIRE);
       this.overrideBlock = BLOCK_TYPE.FIRE;
@@ -249,6 +253,7 @@ Game.prototype.checkLevelProgress = function(stats) {
     if(stats.blockCounts[BLOCK_TYPE.FIRE] >= 5)
     {
       this.currentLevel++;
+      this.currentGoal = "Burn 5 VIRUS";
       this.displayMessage("assignment 003", "VIRUSES are invading! Burn 5 VIRUSES with FIRE!");
       this.virusesEnabled = true;
       this.virusTimer = this.virusDropInterval + 1;
@@ -264,6 +269,7 @@ Game.prototype.checkLevelProgress = function(stats) {
     if(stats.burnedVirusCount >= 5)
     {
       this.currentLevel++;
+      this.currentGoal = "Erode 1 EARTH";
       this.displayMessage("assignment 004", "You've unlocked WATER! Use WATER to erode 1 EARTH block");
       this.placeableBlocks.push(BLOCK_TYPE.WATER);
       this.overrideBlock = BLOCK_TYPE.WATER;
@@ -276,6 +282,7 @@ Game.prototype.checkLevelProgress = function(stats) {
     if(stats.erosionCount >= 1)
     {
       this.currentLevel++;
+      this.currentGoal = "Spread 5 FIRE";
       this.displayMessage("assignment 005", "You've unlocked WIND! Use WIND to spread FIRE 5 times");
       this.placeableBlocks.push(BLOCK_TYPE.WIND);
       this.overrideBlock = BLOCK_TYPE.WIND;

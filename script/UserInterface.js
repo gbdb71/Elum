@@ -60,8 +60,15 @@ UserInterface.prototype.draw = function(context) {
   context.font = "16px Arial, sans-serif";
   context.fillText(tileName, 1020, 140);
 
-  context.fillStyle = "#FFF";
-  context.font = "14px Arial, sans-serif";
-  context.fillText("toxicity " + this.game.currentToxicity + "%", 1020, 190);
+  context.fillText("toxicity", 1020, 190);
+  context.fillText("terraform", 1020, 210);
+
+  context.fillText("goal", 1020, 420);
+  context.fillText(this.game.currentGoal, 1020, 440);
+
+  context.fillText(this.game.currentToxicity + "%", 1100, 190);
+  context.fillText(this.game.currentTerraform, 1100, 210);
+
+
 
 };
