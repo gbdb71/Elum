@@ -12,6 +12,11 @@ function Game(canvas)
   this.grid = new Grid(this);
   this.ui = new UserInterface(this);
 
+  this.reset();
+}
+
+Game.prototype.reset = function()
+{
   this.nextBlockType;
   this.placeableBlocks = [BLOCK_TYPE.EARTH];
   this.overrideBlock = null;
@@ -36,11 +41,7 @@ Game.prototype.update = function()
     var stats = this.grid.update();
     this.checkLevelProgress(stats);
 
-    if(stats.blockCounts[BLOCK_TYPE.VIRUS] > 20)
-    {
-      this.currentState = GAME_STATE.GAME_OVER;
-      return;
-    }
+    this.updateVirusCount(stats.blockCounts[BLOCK_TYPE.VIRUS]);
 
     if(this.virusesEnabled)
     {
@@ -96,6 +97,12 @@ Game.prototype.handleClick = function(game, mouseEvent)
   if(this.currentState === GAME_STATE.PAUSED)
   {
     this.currentState = GAME_STATE.PLAYING;
+    return;
+  }
+
+  if(this.currentState === GAME_STATE.GAME_OVER)
+  {
+    this.reset();
     return;
   }
 
@@ -185,12 +192,28 @@ Game.prototype.updateVirusCount = function(virusCount) {
 
   if(this.currentToxicity >= 100)
   {
-    this.handleLose();
+    this.currentState = GAME_STATE.GAME_OVER;
+    this.displayGameOver();
   }
 
 }
 
-Game.prototype.handleLose = function() {
+Game.prototype.displayGameOver = function() {
+
+  this.context.fillStyle = "rgba(0, 0, 0, 0.5)";
+  this.context.fillRect(0, 0, 1000, 500);
+
+  this.context.fillStyle = "#111";
+  this.context.fillRect(0, 150, 1000, 200);
+
+  this.context.fillStyle = "#777";
+  this.context.font = "30px Arial, sans-serif";
+  this.context.fillText("MISSION FAILED", 50, 200);
+
+  this.context.fillStyle = "#FFF";
+  this.context.font = "20px Arial, sans-serif";
+  this.context.fillText("Planet has become too toxic", 50, 240);
+
 }
 
 Game.prototype.displayMessage = function(modalTitle, modalText) {
