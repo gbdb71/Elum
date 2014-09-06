@@ -173,7 +173,7 @@ Grid.prototype.draw = function(context)
   if(this.placeholderCoords != null)
   {
     context.fillStyle = "#EEE";
-    drawRoundedSquare(context, this.placeholderCoords.x * tileSize, this.placeholderCoords.y * tileSize, 8, tileSize);
+    UTILITY.drawRoundedSquare(context, this.placeholderCoords.x * tileSize, this.placeholderCoords.y * tileSize, 8, tileSize);
   }
 
   // Draw each tile
