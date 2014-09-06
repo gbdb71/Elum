@@ -14,6 +14,7 @@ function Game(canvas)
 
   this.nextBlockType;
   this.placeableBlocks = [BLOCK_TYPE.EARTH];
+  this.overrideBlock = null;
 
   this.virusesEnabled = false;
   this.virusTimer = 0;
@@ -158,7 +159,11 @@ Game.prototype.updateBlockType = function() {
 
   var nextBlockType;
 
-  if(this.placeableBlocks.length == 1)
+  if(this.overrideBlock != null)
+  {
+    nextBlockType = this.overrideBlock;
+  }
+  else if(this.placeableBlocks.length == 1)
   {
     nextBlockType = BLOCK_TYPE.EARTH;
   }
@@ -168,6 +173,7 @@ Game.prototype.updateBlockType = function() {
   }
 
   this.nextBlockType = this.ui.nextBlockType = nextBlockType;
+  this.overrideBlock = null;
 
 }
 
@@ -230,6 +236,7 @@ Game.prototype.checkLevelProgress = function(stats) {
       this.currentLevel++;
       this.displayMessage("assignment 002", "You've unlocked FIRE! Get 5 fires burning at once");
       this.placeableBlocks.push(BLOCK_TYPE.FIRE);
+      this.overrideBlock = BLOCK_TYPE.FIRE;
       return;
     }
 
@@ -259,6 +266,7 @@ Game.prototype.checkLevelProgress = function(stats) {
       this.currentLevel++;
       this.displayMessage("assignment 004", "You've unlocked WATER! Use WATER to erode 1 EARTH block");
       this.placeableBlocks.push(BLOCK_TYPE.WATER);
+      this.overrideBlock = BLOCK_TYPE.WATER;
     }
   }
 
@@ -270,6 +278,7 @@ Game.prototype.checkLevelProgress = function(stats) {
       this.currentLevel++;
       this.displayMessage("assignment 005", "You've unlocked WIND! Use WIND to spread FIRE 5 times");
       this.placeableBlocks.push(BLOCK_TYPE.WIND);
+      this.overrideBlock = BLOCK_TYPE.WIND;
     }
   }
 
