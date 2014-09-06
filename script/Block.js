@@ -26,7 +26,7 @@ function Block(blockType, options) {
       break;
 
     case BLOCK_TYPE.WATER:
-      this.maxHealth = 70;
+      this.maxHealth = 200;
       break;
 
     default:
