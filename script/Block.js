@@ -8,73 +8,55 @@ var BLOCK_TYPE = {
   LIFE: 6
 };
 
-function Block(blockType, options) {
+/**
+ * A block within a grid
+ * @constructor
+ * @param {BLOCK_TYPE}  blockType - Type of block
+ * @param {int}         blockSize - Size of the block (in pixels)
+ * @param {object}      options   - Block options (options: "spreadLife")
+ */
+function Block(blockType, blockSize, options) {
 
   this.type = blockType;
-  this.tileSize = 50;
+  this.tileSize = tileSize;
+
   this.isDying = false;
   this.isDead = false;
-  this.deathClock = 5;
+  this.deathTimer = SETTINGS.BlockDeathTimer;
 
-  switch(this.type)
-  {
-    case BLOCK_TYPE.FIRE:
-      this.maxHealth = 100;
-      break;
+  this.health = this.maxHealth = SETTINGS.BlockHealth[blockType];
+  this.spreadLife = SETTINGS.BlockSpreadLife[blockType];
 
-    case BLOCK_TYPE.WIND:
-      this.maxHealth = 10;
-      break;
-
-    case BLOCK_TYPE.WATER:
-      this.maxHealth = 200;
-      break;
-
-    default:
-      this.maxHealth = 100;
-      break;
-  }
-
+  // Override defaults with options
   if(typeof options != "undefined" && typeof options.spreadLife != "undefined")
   {
     this.spreadLife = options.spreadLife;
   }
-  else
-  {
-    switch(this.type)
-    {
-      case BLOCK_TYPE.WIND:
-        this.spreadLife = 2;
-        break;
-
-      case BLOCK_TYPE.WATER:
-        this.spreadLife = 4;
-        break;
-
-      default:
-        this.spreadLife = 0;
-        break;
-    }
-  }
-
-  this.health = this.maxHealth;
 
 }
 
+/**
+ * Puts a block into a "dying" state
+ */
 Block.prototype.kill = function() {
   this.isDying = true;
 }
 
+/**
+ * Updates the state of the block
+ */
 Block.prototype.update = function() {
+
   if(this.isDying)
   {
-    this.deathClock--;
+    this.deathTimer--;
 
-    if(this.deathClock <= 0)
+    if(this.deathTimer <= 0)
     {
       this.isDead = true;
     }
   }
+
 }
 
 Block.prototype.draw = function(context, x, y) {
