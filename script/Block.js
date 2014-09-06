@@ -81,7 +81,14 @@ Block.prototype.draw = function(context, x, y) {
   var opacity = 1;
   var healthPercentage = Math.floor((this.health/this.maxHealth) * 100);
 
-  if(healthPercentage < 30 && healthPercentage%2 == 0)
+  if(this.type === BLOCK_TYPE.EARTH)
+  {
+    if(healthPercentage%2 == 0)
+    {
+      opacity = 0.9;
+    }
+  }
+  else if(healthPercentage < 30 && healthPercentage%2 == 0)
   {
     opacity = 0.9;
   }
