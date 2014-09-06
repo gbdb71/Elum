@@ -18,7 +18,7 @@ function Block(blockType, options) {
   switch(this.type)
   {
     case BLOCK_TYPE.FIRE:
-      this.maxHealth = 500;
+      this.maxHealth = 100;
       break;
 
     case BLOCK_TYPE.WIND:
@@ -88,7 +88,7 @@ Block.prototype.draw = function(context, x, y) {
       opacity = 0.9;
     }
   }
-  else if(healthPercentage < 30 && healthPercentage%2 == 0)
+  else if(healthPercentage < 50 && healthPercentage%2 == 0)
   {
     opacity = 0.9;
   }
