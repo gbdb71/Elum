@@ -57,7 +57,7 @@ Game.prototype.update = function()
 
         if(this.grid.canPlaceBlock(virusX, 0))
         {
-          this.grid.placeBlock(virusX, 0, new Block(BLOCK_TYPE.VIRUS));
+          this.grid.placeBlock(virusX, 0, new Block(BLOCK_TYPE.VIRUS, 50));
         }
 
         this.virusTimer = 0;
@@ -74,7 +74,7 @@ Game.prototype.update = function()
 
         if(this.grid.canPlaceBlock(lifeX, 0))
         {
-          this.grid.placeBlock(lifeX, 0, new Block(BLOCK_TYPE.LIFE));
+          this.grid.placeBlock(lifeX, 0, new Block(BLOCK_TYPE.LIFE, 50));
         }
 
         this.lifeTimer = 0;
@@ -145,7 +145,7 @@ Game.prototype.handleClick = function(game, mouseEvent)
 
     if(game.grid.canPlaceBlock(gridCoords.x, gridCoords.y))
     {
-      var nextBlock = new Block(game.nextBlockType);
+      var nextBlock = new Block(game.nextBlockType, 50);
       game.grid.placeBlock(gridCoords.x, gridCoords.y, nextBlock);
 
       // Select a new block
