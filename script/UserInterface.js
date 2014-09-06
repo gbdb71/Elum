@@ -17,10 +17,24 @@ function UserInterface(game, x, y, width, height) {
   this.nextBlockType = null;
 
   this.uiLeftMargin = this.uiX + Math.floor(0.1 * this.uiWidth);
+  this.uiInnerLeftMargin = this.uiLeftMargin + Math.floor(this.uiWidth/2);
   this.uiTopMargin = this.uiY + Math.floor(0.14 * this.uiHeight);
 
+  this.tileSelectionY = this.uiTopMargin + Math.floor(0.06 * this.uiHeight);
+  this.tileSelectionTextY = this.tileSelectionY + Math.floor(0.8 * this.tileSelectionHeight);
+  this.tileSelectionHighlightWidth = Math.floor(0.05 * this.uiWidth);
+
+  this.toxicityTextY = Math.floor(0.38 * this.uiHeight);
+  this.waterTextY = Math.floor(0.42 * this.uiHeight);
+
+  this.goalHeaderTextY = Math.floor(0.84 * this.uiHeight);
+  this.goalTextY = Math.floor(0.89 * this.uiHeight);
 };
 
+/**
+ * Renders the user interface
+ * @param {CanvasRenderingContext2D}  context - 2D rendering context to use when rendering the block
+ */
 UserInterface.prototype.draw = function(context) {
 
   // Draw background
@@ -29,7 +43,7 @@ UserInterface.prototype.draw = function(context) {
 
   // Draw game title
   context.fillStyle = SETTINGS.UiTextColor;
-  context.font = SETTINGS.UiFontStyle;
+  context.font = SETTINGS.UiTitleFontStyle;
   context.fillText("elum", this.uiLeftMargin, this.uiTopMargin);
 
   var tileName;
@@ -38,44 +52,47 @@ UserInterface.prototype.draw = function(context) {
   switch(this.nextBlockType)
   {
     case BLOCK_TYPE.FIRE:
-      context.fillStyle = "rgba(214, 30, 30, 1)";
       tileName = "fire";
       break;
 
     case BLOCK_TYPE.EARTH:
-      context.fillStyle = "rgba(196, 107, 33, 1)";
       tileName = "earth";
       break;
 
     case BLOCK_TYPE.WATER:
-      context.fillStyle = "rgba(33, 104, 196, 1)";
       tileName = "water";
       break;
 
     case BLOCK_TYPE.WIND:
-      context.fillStyle = "rgba(112, 208, 230, 1)";
       tileName = "wind";
       break;
   }
 
-  context.fillRect(this.uiX, 100, this.uiWidth, this.tileSelectionHeight);
+  // Draw base tile preview
+  context.fillStyle
+    = UTILITY.getRgbaFillStyle(SETTINGS.BlockBaseColor[this.nextBlockType], 1);
+  context.fillRect(this.uiX, this.tileSelectionY, this.uiWidth, this.tileSelectionHeight);
 
+  // Draw tile preview highlight
   context.fillStyle = "rgba(255, 255, 255, 0.1)";
-  context.fillRect(this.uiX, 100, 10, this.tileSelectionHeight);
+  context.fillRect(
+    this.uiX, this.tileSelectionY,
+    this.tileSelectionHighlightWidth, this.tileSelectionHeight);
 
-  context.fillStyle = "#FFF";
-  context.font = "16px Arial, sans-serif";
-  context.fillText(tileName, this.uiLeftMargin, 140);
+  // Tile preview text
+  context.fillStyle = SETTINGS.UiTextColor;
+  context.font = SETTINGS.UiFontStyle;
+  context.fillText(tileName, this.uiLeftMargin, this.tileSelectionTextY);
 
-  context.fillText("toxicity", this.uiLeftMargin, 190);
-  context.fillText("water", this.uiLeftMargin, 210);
+  // Current levels
+  context.fillText("toxicity", this.uiLeftMargin, this.toxicityTextY);
+  context.fillText(this.game.currentToxicity + "%", this.uiInnerLeftMargin, this.toxicityTextY);
 
-  context.fillText("goal", this.uiLeftMargin, 420);
-  context.fillText(this.game.currentGoal, this.uiLeftMargin, 440);
+  context.fillText("water", this.uiLeftMargin, this.waterTextY);
+  context.fillText(this.game.currentWaterLevel + "%", this.uiInnerLeftMargin, this.waterTextY);
 
-  context.fillText(this.game.currentToxicity + "%", 1100, 190);
-  context.fillText(this.game.currentWaterLevel + "%", 1100, 210);
-
-
+  // Goal
+  context.fillText("goal", this.uiLeftMargin, this.goalHeaderTextY);
+  context.fillText(this.game.currentGoal, this.uiLeftMargin, this.goalTextY);
 
 };

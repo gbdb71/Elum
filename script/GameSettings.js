@@ -22,8 +22,11 @@ var SETTINGS = {
   // UI Text Color
   UiTextColor: "#FFF",
 
-  // UI Font Color
-  UiFontStyle: "40px Arial, sans-serif"
+  // UI Title Font Style
+  UiTitleFontStyle: "40px Arial, sans-serif",
+
+  // UI Font Style
+  UiFontStyle: "16px Arial, sans-serif"
 
 };
 
