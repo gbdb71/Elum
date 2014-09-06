@@ -17,7 +17,7 @@ function Game(canvas)
 
   this.virusesEnabled = false;
   this.virusTimer = 0;
-  this.virusDropInterval = 30;
+  this.virusDropInterval = 40;
 
   this.currentToxicity = 0;
 
@@ -236,7 +236,7 @@ Game.prototype.checkLevelProgress = function(stats) {
     return;
   }
 
-  // Level 3: Place 10 FIRE blocks
+  // Level 3: Place 5 FIRE blocks
   if(this.currentLevel == 3)
   {
     if(stats.blockCounts[BLOCK_TYPE.FIRE] >= 5)
@@ -251,14 +251,25 @@ Game.prototype.checkLevelProgress = function(stats) {
     return;
   }
 
-  // Level 4: Erode 5 EARTH blocks with WATER
+  // Level 4: Burn 10 VIRUSES with FIRE
   if(this.currentLevel == 4)
   {
     if(stats.burnedVirusCount >= 5)
     {
       this.currentLevel++;
-      this.displayMessage("assignment 004", "You've unlocked WATER! Erode 5 EARTH blocks with WATER");
+      this.displayMessage("assignment 004", "You've unlocked WATER! Use WATER to erode 1 EARTH block");
       this.placeableBlocks.push(BLOCK_TYPE.WATER);
+    }
+  }
+
+  // Level 5: Erode 1 EARTH block with WATER
+  if(this.currentLevel == 5)
+  {
+    if(stats.erosionCount >= 1)
+    {
+      this.currentLevel++;
+      this.displayMessage("assignment 005", "You've unlocked WIND! Use WIND to spread FIRE 5 times");
+      this.placeableBlocks.push(BLOCK_TYPE.WIND);
     }
   }
 

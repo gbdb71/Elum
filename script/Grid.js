@@ -28,6 +28,7 @@ function Grid(game)
 
   this.globalStats = {};
   this.globalStats.burnedVirusCount = 0;
+  this.globalStats.erosionCount = 0;
 
 }
 
@@ -197,6 +198,11 @@ Grid.prototype.update = function()
 
     if(block.isDead)
     {
+      if(block.type === BLOCK_TYPE.EARTH)
+      {
+        self.globalStats.erosionCount++;
+      }
+
       self.removeBlock(x, y);
       return;
     }
@@ -377,6 +383,7 @@ Grid.prototype.update = function()
   });
 
   stats.burnedVirusCount = this.globalStats.burnedVirusCount;
+  stats.erosionCount = this.globalStats.erosionCount;
   return stats;
 
 }
