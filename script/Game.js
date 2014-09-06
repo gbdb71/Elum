@@ -26,6 +26,7 @@ Game.prototype.reset = function()
   this.virusDropInterval = 40;
 
   this.currentToxicity = 0;
+  this.currentTerraform = 0;
 
   this.currentState = GAME_STATE.PLAYING;
 
@@ -42,6 +43,7 @@ Game.prototype.update = function()
     this.checkLevelProgress(stats);
 
     this.updateVirusCount(stats.blockCounts[BLOCK_TYPE.VIRUS]);
+    this.updateTerraform(stats.blockCounts[BLOCK_TYPE.EARTH], stats.blockCounts[BLOCK_TYPE.WATER]);
 
     if(this.virusesEnabled)
     {
@@ -198,6 +200,19 @@ Game.prototype.updateVirusCount = function(virusCount) {
 
 }
 
+Game.prototype.updateTerraform = function(earthCount, waterCount) {
+
+  if(earthCount == 0 || waterCount == 0)
+  {
+    this.currentTerraform = 0;
+  }
+  else
+  {
+    this.currentTerraform = Math.min(earthCount, waterCount) / Math.max(earthCount, waterCount);
+  }
+
+}
+
 Game.prototype.displayGameOver = function() {
 
   this.context.fillStyle = "rgba(0, 0, 0, 0.5)";
@@ -306,7 +321,7 @@ Game.prototype.checkLevelProgress = function(stats) {
     {
       this.currentLevel++;
       this.currentGoal = "Spread 5 FIRE";
-      this.displayMessage("assignment 005", "You've unlocked WIND! Use WIND to spread FIRE 5 times");
+      this.displayMessage("assignment 005", "You've unlocked WIND! Use WIND to spread 50 FIRE blocks");
       this.placeableBlocks.push(BLOCK_TYPE.WIND);
       this.overrideBlock = BLOCK_TYPE.WIND;
     }
@@ -315,7 +330,7 @@ Game.prototype.checkLevelProgress = function(stats) {
   // Level 6: Spread 5 FIRE blocks with WIND
   if(this.currentLevel == 6)
   {
-    if(stats.windSpreadFireCount >= 5)
+    if(stats.windSpreadFireCount >= 50)
     {
       this.currentLevel++;
       this.currentGoal = "Balance EARTH and WATER";

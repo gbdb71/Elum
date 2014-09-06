@@ -192,6 +192,7 @@ Grid.prototype.update = function()
   stats.blockCounts[BLOCK_TYPE.EARTH] = 0;
   stats.blockCounts[BLOCK_TYPE.FIRE] = 0;
   stats.blockCounts[BLOCK_TYPE.VIRUS] = 0;
+  stats.blockCounts[BLOCK_TYPE.WATER] = 0;
 
   this.eachBlock(function(x, y, block) {
 
@@ -307,7 +308,7 @@ Grid.prototype.update = function()
 
     if(block.health <= 0)
     {
-      self.removeBlock(x, y);
+      block.kill();
     }
 
     if(block.type === BLOCK_TYPE.WIND)
