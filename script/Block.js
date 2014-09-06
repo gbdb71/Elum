@@ -4,7 +4,8 @@ var BLOCK_TYPE = {
   EARTH: 2,
   FIRE: 3,
   WIND: 4,
-  VIRUS: 5
+  VIRUS: 5,
+  LIFE: 6
 };
 
 function Block(blockType, options) {

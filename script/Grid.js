@@ -193,6 +193,7 @@ Grid.prototype.update = function()
   stats.blockCounts[BLOCK_TYPE.FIRE] = 0;
   stats.blockCounts[BLOCK_TYPE.VIRUS] = 0;
   stats.blockCounts[BLOCK_TYPE.WATER] = 0;
+  stats.blockCounts[BLOCK_TYPE.LIFE] = 0;
 
   this.eachBlock(function(x, y, block) {
 
@@ -236,6 +237,7 @@ Grid.prototype.update = function()
                   neighborBlock.type === BLOCK_TYPE.WIND
                   || neighborBlock.type === BLOCK_TYPE.FIRE
                   || neighborBlock.type === BLOCK_TYPE.WATER
+                  || neighborBlock.type === BLOCK_TYPE.LIFE
                 )
           )
         {
@@ -301,6 +303,13 @@ Grid.prototype.update = function()
       if(block.type === BLOCK_TYPE.EARTH && neighborBlock.type === BLOCK_TYPE.WATER)
       {
         block.health--;
+        return;
+      }
+
+      if(block.type === BLOCK_TYPE.LIFE
+          && (neighborBlock.type === BLOCK_TYPE.FIRE || neighborBlock.type === BLOCK_TYPE.WATER))
+      {
+        block.kill();
         return;
       }
 

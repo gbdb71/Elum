@@ -25,13 +25,15 @@ Game.prototype.reset = function()
   this.virusTimer = 0;
   this.virusDropInterval = 40;
 
+  this.lifeEnabled = false;
+  this.lifeTimer = 0;
+  this.lifeDropInterval = 100;
+
   this.currentToxicity = 0;
   this.currentTerraform = 0;
 
   this.currentState = GAME_STATE.PLAYING;
-
   this.currentLevel = 0;
-
   this.currentGoal = "";
 }
 
@@ -43,7 +45,7 @@ Game.prototype.update = function()
     this.checkLevelProgress(stats);
 
     this.updateVirusCount(stats.blockCounts[BLOCK_TYPE.VIRUS]);
-    this.updateTerraform(stats.blockCounts[BLOCK_TYPE.EARTH], stats.blockCounts[BLOCK_TYPE.WATER]);
+    this.updateWaterLevel(stats.blockCounts[BLOCK_TYPE.WATER]);
 
     if(this.virusesEnabled)
     {
@@ -59,6 +61,23 @@ Game.prototype.update = function()
         }
 
         this.virusTimer = 0;
+      }
+    }
+
+    if(this.lifeEnabled)
+    {
+      this.lifeTimer++;
+
+      if(this.lifeTimer > this.lifeDropInterval)
+      {
+        var lifeX = Math.floor(Math.random() * this.grid.width);
+
+        if(this.grid.canPlaceBlock(lifeX, 0))
+        {
+          this.grid.placeBlock(lifeX, 0, new Block(BLOCK_TYPE.LIFE));
+        }
+
+        this.lifeTimer = 0;
       }
     }
   }
@@ -200,16 +219,9 @@ Game.prototype.updateVirusCount = function(virusCount) {
 
 }
 
-Game.prototype.updateTerraform = function(earthCount, waterCount) {
+Game.prototype.updateWaterLevel = function(waterCount) {
 
-  if(earthCount == 0 || waterCount == 0)
-  {
-    this.currentTerraform = 0;
-  }
-  else
-  {
-    this.currentTerraform = Math.min(earthCount, waterCount) / Math.max(earthCount, waterCount);
-  }
+  this.currentWaterLevel = Math.floor((waterCount/10) * 100);
 
 }
 
@@ -320,22 +332,41 @@ Game.prototype.checkLevelProgress = function(stats) {
     if(stats.erosionCount >= 1)
     {
       this.currentLevel++;
-      this.currentGoal = "Spread 5 FIRE";
+      this.currentGoal = "Spread 50 FIRE";
       this.displayMessage("assignment 005", "You've unlocked WIND! Use WIND to spread 50 FIRE blocks");
       this.placeableBlocks.push(BLOCK_TYPE.WIND);
       this.overrideBlock = BLOCK_TYPE.WIND;
     }
   }
 
-  // Level 6: Spread 5 FIRE blocks with WIND
+  // Level 6: Spread 50 FIRE blocks with WIND
   if(this.currentLevel == 6)
   {
     if(stats.windSpreadFireCount >= 50)
     {
       this.currentLevel++;
-      this.currentGoal = "Balance EARTH and WATER";
-      this.displayMessage("assignment 006", "You're ready to terraform! Balance EARTH and WATER levels");
+      this.currentGoal = "Place 10 WATER";
+      this.displayMessage("assignment 006", "You're ready to terraform! Place 10 WATER blocks");
     }
   }
 
+  // Level 7: Place 10 WATER blocks
+  if(this.currentLevel == 7)
+  {
+    if(stats.blockCounts[BLOCK_TYPE.WATER] >= 10)
+    {
+      this.currentLevel++;
+      this.currentGoal = "Support 10 LIFE";
+      this.displayMessage("assignment 007", "Keep 10 WATER blocks to support 10 LIFE");
+    }
+  }
+
+  // Level 8: Support 10 LIFE
+  if(this.currentLevel == 8)
+  {
+    if(stats.blockCounts[BLOCK_TYPE.LIFE] >= 10)
+    {
+      this.displayWin();
+    }
+  }
 }
