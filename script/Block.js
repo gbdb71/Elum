@@ -12,7 +12,7 @@ var BLOCK_TYPE = {
  * A block within a grid
  * @constructor
  * @param {BLOCK_TYPE}  blockType - Type of block
- * @param {int}         blockSize - Size of the block (in pixels)
+ * @param {integer}     blockSize - Size of the block (in pixels)
  * @param {object}      options   - Block options (options: "spreadLife")
  */
 function Block(blockType, blockSize, options) {
@@ -33,6 +33,31 @@ function Block(blockType, blockSize, options) {
     this.spreadLife = options.spreadLife;
   }
 
+  // Drawing calculations
+  this.blockRadius = Math.floor(0.16 * tileSize);
+  this.innerBlockWidth = tileSize - Math.floor(0.1 * tileSize);
+  this.innerBlockOffset = Math.floor(innerBlockWidth/2);
+
+  this.waterEmblemRadius = Math.floor(0.2 * tileSize);
+  this.waterEmblemEndAngle = Math.PI * 2;
+
+  this.fireEmblemOffset = Math.floor(0.3 * tileSize);
+
+  this.earthEmblemRadius = Math.floor(this.blockRadius/2);
+  this.earthEmblemWidth = tileSize - Math.floor(0.6 * tileSize);
+  this.earthEmblemOffset = Math.floor(earthEmblemWidth/2);
+
+  this.windEmblemWidth = Math.floor(0.6 * tileSize);
+  this.windEmblemHeight = Math.floor(0.1 * tileSize);
+  this.windEmblemYOffset = Math.floor(0.26 * tileSize);
+  this.windEmblemXOffset = Math.floor(0.2 * tileSize);
+  this.windEmblemSpace = Math.floor(0.1 * tileSize);
+
+  this.virusEmblemBarWidth = Math.floor(0.7 * tileSize);
+  this.virusEmblemBarHeight = Math.floor(0.16 * tileSize);
+  this.virusEmblemBarRotation = Math.PI/4;
+  this.virusEmblemXOffset = Math.floor(0.3 * tileSize);
+  this.virusEmblemYOffset = Math.floor(0.2 * tileSize);
 }
 
 /**
@@ -59,142 +84,146 @@ Block.prototype.update = function() {
 
 }
 
+/**
+ * Renders the block
+ * @param {CanvasRenderingContext2D}  context - 2D rendering context to use when rendering the block
+ * @param {integer}                   x       - X-coordinate of the block (in tile position)
+ * @param {integer}                   y       - Y-coordinate of the block (in tile position)
+ */
 Block.prototype.draw = function(context, x, y) {
 
   var opacity = 1;
   var healthPercentage = Math.floor((this.health/this.maxHealth) * 100);
 
-  if(this.type === BLOCK_TYPE.EARTH)
-  {
-    if(healthPercentage%2 == 0)
-    {
-      opacity = 0.9;
-    }
-  }
-  else if(healthPercentage < 50 && healthPercentage%2 == 0)
+  // "Flash" the block to show that it is deteriorating
+  // NOTE: EARTH blocks always flash
+  if((this.type === BLOCK_TYPE.EARTH || healthPercentage < 50)
+      && healthPercentage%2 == 0)
   {
     opacity = 0.9;
   }
 
+  // "Flash" the block with a sharper contrast when it is dying
   if(this.isDying && this.deathClock%2 == 0)
   {
     opacity = 0.1;
   }
 
-  switch(this.type)
-  {
-    case BLOCK_TYPE.FIRE:
-      context.fillStyle = "rgba(214, 30, 30, " + opacity + ")";
-      break;
-
-    case BLOCK_TYPE.EARTH:
-      context.fillStyle = "rgba(196, 107, 33, " + opacity + ")";
-      break;
-
-    case BLOCK_TYPE.WATER:
-      context.fillStyle = "rgba(33, 104, 196, " + opacity + ")";
-      break;
-
-    case BLOCK_TYPE.WIND:
-      context.fillStyle = "rgba(112, 208, 230, " + opacity + ")";
-      break;
-
-    case BLOCK_TYPE.VIRUS:
-      context.fillStyle = "rgba(77, 168, 37, " + opacity + ")";
-      break;
-
-    default:
-      context.fillStyle = "rgba(1, 1, 1, " + opacity + ")";
-      break;
-  }
-
-  var radius = 8;
   var tileX = x * this.tileSize;
   var tileY = y * this.tileSize;
-  var tileMiddleX = tileX + (this.tileSize/2);
+  var halfTileSize = (this.tileSize/2);
+  var tileMiddleX = tileX + halfTileSize;
+  var tileMiddleY = tileY + halfTileSize;
 
-  // Draw tile shape
-  drawRoundedSquare(context, tileX, tileY, radius, this.tileSize);
+  // Draw outer tile
+  context.fillStyle
+    = UTILITY.getRgbaFillStyle(SETTINGS.BlockBaseColor[blockType], opacity);
+
+  UTILITY.drawRoundedSquare(
+    context,
+    tileX,
+    tileY,
+    this.blockRadius,
+    this.tileSize);
+
+  // Draw inner tile
+  context.fillStyle
+    = UTILITY.getRgbaFillStyle(SETTINGS.BlockInnerColor[blockType], opacity);
+
+  UTILITY.drawRoundedSquare(
+    context,
+    tileX + this.innerBlockOffset,
+    tileY + this.innerBlockOffset,
+    this.blockRadius,
+    this.innerBlockWidth);
+
+  // Draw block emblem
+  context.fillStyle
+    = UTILITY.getRgbaFillStyle(SETTINGS.BlockBaseColor[blockType], opacity);
 
   if(this.type === BLOCK_TYPE.WATER)
   {
-    context.fillStyle = "rgba(29, 87, 163, " + opacity + ")";
-    drawRoundedSquare(context, tileX + 5, tileY + 5, radius, this.tileSize - 10);
-
-    context.fillStyle = "rgba(33, 104, 196, " + opacity + ")";
+    // WATER: Circle
     context.beginPath();
-    context.arc(tileMiddleX, tileY + (this.tileSize/2), 10, 0, Math.PI * 2, true);
+
+    context.arc(
+      tileMiddleX, tileMiddleY,
+      this.waterEmblemRadius,
+      0, this.waterEmblemEndAngle, true);
+
     context.fill();
+    return;
   }
 
   if(this.type === BLOCK_TYPE.FIRE)
   {
-    context.fillStyle = "rgba(184, 26, 26, " + opacity + ")";
-    drawRoundedSquare(context, tileX + 5, tileY + 5, radius, this.tileSize - 10);
-
-    context.fillStyle = "rgba(214, 30, 30, " + opacity + ")";
+    // FIRE: Triangle
     context.beginPath();
-    context.moveTo(tileMiddleX, tileY + 15);
-    context.lineTo(tileX + 15, tileY + this.tileSize - 15);
-    context.lineTo(tileX + this.tileSize - 15, tileY + this.tileSize - 15);
+    context.moveTo(tileMiddleX, tileY + this.fireEmblemOffset);
+
+    context.lineTo(
+      tileX + this.fireEmblemOffset,
+      tileY + this.tileSize - this.fireEmblemOffset);
+
+    context.lineTo(
+      tileX + this.tileSize - this.fireEmblemOffset,
+      tileY + this.tileSize - this.fireEmblemOffset);
+
     context.fill();
+    return;
   }
 
   if(this.type === BLOCK_TYPE.EARTH)
   {
-    context.fillStyle = "rgba(168, 93, 30, " + opacity + ")";
-    drawRoundedSquare(context, tileX + 5, tileY + 5, radius, this.tileSize - 10);
+    // EARTH: Square
+    UTILTITY.drawRoundedSquare(
+      context,
+      tileX + this.earthEmbledOffset, tileY + this.earthEmblemOffset,
+      this.earthEmblemRadius,
+      this.earthEmblemWidth);
 
-    context.fillStyle = "rgba(196, 107, 33, " + opacity + ")";
-    drawRoundedSquare(context, tileX + 15, tileY + 15, 4, this.tileSize - 30);
+    return;
   }
 
   if(this.type === BLOCK_TYPE.WIND)
   {
-    context.fillStyle = "rgba(123, 216, 237, " + opacity + ")";
-    drawRoundedSquare(context, tileX + 5, tileY + 5, radius, this.tileSize - 10);
+    // WIND: Three Lines
+    var windEmblemX = tileX + this.windEmblemXOffset;
+    var windEmblemY = tileY + this.windEmblemYOffset;
 
-    context.fillStyle = "rgba(112, 208, 230, " + opacity + ")";
-    context.fillRect(tileX + 10, tileY + 13, 30, 5);
-    context.fillRect(tileX + 10, tileY + 23, 30, 5);
-    context.fillRect(tileX + 10, tileY + 33, 30, 5);
+    for(var i=0; i<3; i++)
+    {
+      context.fillRect(
+        windEmblemX,
+        windEmblemY + (i * this.windEmblemSpace),
+        this.windEmblemWidth,
+        this.windEmblemHeight);
+    }
+
+    return;
   }
 
   if(this.type === BLOCK_TYPE.VIRUS)
   {
-    context.fillStyle = "rgba(64, 138, 32, " + opacity + ")";
-    drawRoundedSquare(context, tileX + 5, tileY + 5, radius, this.tileSize - 10);
-
-    context.fillStyle = "rgba(72, 156, 36, " + opacity + ")";
+    // VIRUS: "X" Shape
 
     context.save();
-    context.translate(tileX + 15, tileY + 10);
-    context.rotate(Math.PI/4);
-    context.fillRect(0, 0, 35, 8);
+    context.translate(
+      tileX + this.virusEmblemXOffset,
+      tileY + this.virusEmblemYOffset);
+    context.rotate(this.virusEmbledBarRotation);
+    context.fillRect(0, 0, this.virusEmblemBarWidth, this.virusEmblemBarHeight);
     context.restore();
 
     context.save();
-    context.translate(tileX + 10, tileY + this.tileSize - 15);
-    context.rotate(-Math.PI/4);
-    context.fillRect(0, 0, 35, 8);
+    context.translate(
+      tileX + this.virusEmblemYOffset,
+      tileY + this.tileSize - this.virusEmblemXOffset);
+    context.rotate(-this.virusEmbledBarRotation);
+    context.fillRect(0, 0, this.virusEmblemBarWidth, this.virusEmblemBarHeight);
     context.restore();
+
+    return;
   }
 
 };
-
-function drawRoundedSquare(context, x, y, borderRadius, width) {
-
-  // Credit: https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Canvas_tutorial/Drawing_shapes
-  context.beginPath();
-  context.moveTo(x, y + borderRadius);
-  context.lineTo(x, y + width - borderRadius);
-  context.quadraticCurveTo(x, y + width, x + borderRadius, y + width);
-  context.lineTo(x + width - borderRadius, y + width);
-  context.quadraticCurveTo(x + width, y + width, x + width, y + width - borderRadius);
-  context.lineTo(x + width, y + borderRadius);
-  context.quadraticCurveTo(x + width, y, x + width - borderRadius, y);
-  context.lineTo(x + borderRadius, y);
-  context.quadraticCurveTo(x, y, x, y + borderRadius);
-  context.fill();
-
-}

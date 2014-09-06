@@ -8,7 +8,13 @@ var SETTINGS = {
 
   // Default "spread" of a block (how many blocks a block can create by
   // multiplying itself)
-  BlockSpreadLife: []
+  BlockSpreadLife: [],
+
+  // Base color for a block
+  BlockBaseColor: [],
+
+  // Inner tile color for a block
+  BlockInnerColor: [],
 
 };
 
@@ -25,3 +31,25 @@ SETTINGS.BlockSpreadLife[BLOCK_TYPE.WATER] = 4;
 SETTINGS.BlockSpreadLife[BLOCK_TYPE.EARTH] = 0;
 SETTINGS.BlockSpreadLife[BLOCK_TYPE.VIRUS] = 0;
 SETTINGS.BlockSpreadLife[BLOCK_TYPE.LIFE] = 0;
+
+SETTINGS.BlockbaseColor[BLOCK_TYPE.FIRE] = "214, 30, 30";
+SETTINGS.BlockbaseColor[BLOCK_TYPE.WIND] = "112, 208, 230";
+SETTINGS.BlockbaseColor[BLOCK_TYPE.WATER] = "33, 104, 196";
+SETTINGS.BlockbaseColor[BLOCK_TYPE.EARTH] = "196, 107, 33";
+SETTINGS.BlockbaseColor[BLOCK_TYPE.VIRUS] = "77, 168, 37";
+SETTINGS.BlockbaseColor[BLOCK_TYPE.LIFE] = "1, 1, 1";
+
+SETTINGS.BlockInnerColor[BLOCK_TYPE.FIRE] = "214, 30, 30";
+SETTINGS.BlockInnerColor[BLOCK_TYPE.WIND] = "112, 208, 230";
+SETTINGS.BlockInnerColor[BLOCK_TYPE.WATER] = "29, 87, 163";
+SETTINGS.BlockInnerColor[BLOCK_TYPE.EARTH] = "196, 107, 33";
+SETTINGS.BlockInnerColor[BLOCK_TYPE.VIRUS] = "77, 168, 37";
+SETTINGS.BlockInnerColor[BLOCK_TYPE.LIFE] = "1, 1, 1";
+
+
+/*
+  default:
+
+    break;
+}
+*/
