@@ -35,8 +35,9 @@ function Block(blockType, blockSize, options) {
 
   // Drawing calculations
   this.blockRadius = Math.floor(0.16 * blockSize);
-  this.innerBlockWidth = blockSize - Math.floor(0.1 * blockSize);
-  this.innerBlockOffset = Math.floor(this.innerBlockWidth/2);
+  this.innerBlockWidthDiff = Math.floor(0.2 * blockSize)
+  this.innerBlockWidth = blockSize - this.innerBlockWidthDiff;
+  this.innerBlockOffset = Math.floor(this.innerBlockWidthDiff/2);
 
   this.waterEmblemRadius = Math.floor(0.2 * blockSize);
   this.waterEmblemEndAngle = Math.PI * 2;
@@ -44,8 +45,9 @@ function Block(blockType, blockSize, options) {
   this.fireEmblemOffset = Math.floor(0.3 * blockSize);
 
   this.earthEmblemRadius = Math.floor(this.blockRadius/2);
-  this.earthEmblemWidth = blockSize - Math.floor(0.6 * blockSize);
-  this.earthEmblemOffset = Math.floor(this.earthEmblemWidth/2);
+  this.earthEmblemWidthDiff = Math.floor(0.6 * blockSize);
+  this.earthEmblemWidth = blockSize - this.earthEmblemWidthDiff;
+  this.earthEmblemOffset = Math.floor(this.earthEmblemWidthDiff/2);
 
   this.windEmblemWidth = Math.floor(0.6 * blockSize);
   this.windEmblemHeight = Math.floor(0.1 * blockSize);
@@ -55,7 +57,7 @@ function Block(blockType, blockSize, options) {
 
   this.virusEmblemBarWidth = Math.floor(0.7 * blockSize);
   this.virusEmblemBarHeight = Math.floor(0.16 * blockSize);
-  this.virusEmblemBarRotation = Math.PI/4;
+  this.virusEmblemBarRotation = (Math.PI/4);
   this.virusEmblemXOffset = Math.floor(0.3 * blockSize);
   this.virusEmblemYOffset = Math.floor(0.2 * blockSize);
 }
@@ -104,7 +106,7 @@ Block.prototype.draw = function(context, x, y) {
   }
 
   // "Flash" the block with a sharper contrast when it is dying
-  if(this.isDying && this.deathClock%2 == 0)
+  if(this.isDying && this.deathTimer%2 == 0)
   {
     opacity = 0.1;
   }
@@ -117,7 +119,7 @@ Block.prototype.draw = function(context, x, y) {
 
   // Draw outer tile
   context.fillStyle
-    = UTILITY.getRgbaFillStyle(SETTINGS.BlockBaseColor[this.blockType], opacity);
+    = UTILITY.getRgbaFillStyle(SETTINGS.BlockBaseColor[this.type], opacity);
 
   UTILITY.drawRoundedSquare(
     context,
@@ -128,7 +130,7 @@ Block.prototype.draw = function(context, x, y) {
 
   // Draw inner tile
   context.fillStyle
-    = UTILITY.getRgbaFillStyle(SETTINGS.BlockInnerColor[this.blockType], opacity);
+    = UTILITY.getRgbaFillStyle(SETTINGS.BlockInnerColor[this.type], opacity);
 
   UTILITY.drawRoundedSquare(
     context,
@@ -139,7 +141,7 @@ Block.prototype.draw = function(context, x, y) {
 
   // Draw block emblem
   context.fillStyle
-    = UTILITY.getRgbaFillStyle(SETTINGS.BlockBaseColor[this.blockType], opacity);
+    = UTILITY.getRgbaFillStyle(SETTINGS.BlockBaseColor[this.type], opacity);
 
   if(this.type === BLOCK_TYPE.WATER)
   {
@@ -178,7 +180,7 @@ Block.prototype.draw = function(context, x, y) {
     // EARTH: Square
     UTILITY.drawRoundedSquare(
       context,
-      tileX + this.earthEmbledOffset, tileY + this.earthEmblemOffset,
+      tileX + this.earthEmblemOffset, tileY + this.earthEmblemOffset,
       this.earthEmblemRadius,
       this.earthEmblemWidth);
 
@@ -211,7 +213,7 @@ Block.prototype.draw = function(context, x, y) {
     context.translate(
       tileX + this.virusEmblemXOffset,
       tileY + this.virusEmblemYOffset);
-    context.rotate(this.virusEmbledBarRotation);
+    context.rotate(this.virusEmblemBarRotation);
     context.fillRect(0, 0, this.virusEmblemBarWidth, this.virusEmblemBarHeight);
     context.restore();
 
@@ -219,7 +221,7 @@ Block.prototype.draw = function(context, x, y) {
     context.translate(
       tileX + this.virusEmblemYOffset,
       tileY + this.blockSize - this.virusEmblemXOffset);
-    context.rotate(-this.virusEmbledBarRotation);
+    context.rotate(-this.virusEmblemBarRotation);
     context.fillRect(0, 0, this.virusEmblemBarWidth, this.virusEmblemBarHeight);
     context.restore();
 
