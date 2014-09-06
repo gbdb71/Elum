@@ -278,7 +278,7 @@ Grid.prototype.update = function()
       {
         self.globalStats.windSpreadFireCount++;
         self.removeBlock(neighborX, neighborY);
-        self.placeBlock(neighborX, neighborY, new Block(BLOCK_TYPE.FIRE, this.tileSize));
+        self.placeBlock(neighborX, neighborY, new Block(BLOCK_TYPE.FIRE, self.tileSize));
         return;
       }
 
@@ -286,7 +286,7 @@ Grid.prototype.update = function()
       if(block.type === BLOCK_TYPE.VIRUS && neighborBlock.type === BLOCK_TYPE.WATER)
       {
         self.removeBlock(neighborX, neighborY);
-        self.placeBlock(neighborX, neighborY, new Block(BLOCK_TYPE.VIRUS, this.tileSize));
+        self.placeBlock(neighborX, neighborY, new Block(BLOCK_TYPE.VIRUS, self.tileSize));
         return;
       }
 
@@ -329,25 +329,25 @@ Grid.prototype.update = function()
         // Spread up
         if(self.canPlaceBlock(x, y - 1))
         {
-          self.placeBlock(x, y - 1, new Block(BLOCK_TYPE.WIND, this.tileSize, {spreadLife: childSpreadLife}));
+          self.placeBlock(x, y - 1, new Block(BLOCK_TYPE.WIND, self.tileSize, {spreadLife: childSpreadLife}));
         }
 
         // Spread down
         if(self.canPlaceBlock(x, y + 1))
         {
-          self.placeBlock(x, y + 1, new Block(BLOCK_TYPE.WIND, this.tileSize, {spreadLife: childSpreadLife}));
+          self.placeBlock(x, y + 1, new Block(BLOCK_TYPE.WIND, self.tileSize, {spreadLife: childSpreadLife}));
         }
 
         // Spread right
         if(self.canPlaceBlock(x + 1, y))
         {
-          self.placeBlock(x + 1, y, new Block(BLOCK_TYPE.WIND, this.tileSize, {spreadLife: childSpreadLife}));
+          self.placeBlock(x + 1, y, new Block(BLOCK_TYPE.WIND, self.tileSize, {spreadLife: childSpreadLife}));
         }
 
         // Spread left
         if(self.canPlaceBlock(x - 1, y))
         {
-          self.placeBlock(x - 1, y, new Block(BLOCK_TYPE.WIND, this.tileSize, {spreadLife: childSpreadLife}));
+          self.placeBlock(x - 1, y, new Block(BLOCK_TYPE.WIND, self.tileSize, {spreadLife: childSpreadLife}));
         }
 
         block.spreadLife = 0;
@@ -375,13 +375,13 @@ Grid.prototype.update = function()
             // Spread right
             if(self.canPlaceBlock(x + 1, y))
             {
-              self.placeBlock(x + 1, y, new Block(BLOCK_TYPE.WATER, this.tileSize, { spreadLife: childSpreadLife }));
+              self.placeBlock(x + 1, y, new Block(BLOCK_TYPE.WATER, self.tileSize, { spreadLife: childSpreadLife }));
             }
 
             // Spread left
             if(self.canPlaceBlock(x - 1, y))
             {
-              self.placeBlock(x - 1, y, new Block(BLOCK_TYPE.WATER, this.tileSize, { spreadLife: childSpreadLife }));
+              self.placeBlock(x - 1, y, new Block(BLOCK_TYPE.WATER, self.tileSize, { spreadLife: childSpreadLife }));
             }
           }
 
