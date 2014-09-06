@@ -1,10 +1,10 @@
 var UTILITY = {
 
-  function getRgbaFillStyle(rgb, opacity) {
-    return "rgba(" rgb + ", " + opacity + ")";
-  }
+  getRgbaFillStyle: function(rgb, opacity) {
+    return "rgba(" + rgb + ", " + opacity + ")";
+  },
 
-  function drawRoundedSquare(context, x, y, borderRadius, width) {
+  drawRoundedSquare: function(context, x, y, borderRadius, width) {
 
     // Credit: https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Canvas_tutorial/Drawing_shapes
     context.beginPath();
