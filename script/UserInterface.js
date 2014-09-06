@@ -1,29 +1,36 @@
-function UserInterface(game) {
+/**
+ * The user interface that displays information about the current game status
+ * @constructor
+ * @param {Game}  game  - Current game
+ */
+function UserInterface(game, x, y, width, height) {
 
   this.game = game;
 
-  this.uiX = 1000;
-  this.uiWidth = 200;
+  this.uiX = x;
+  this.uiY = y;
+  this.uiWidth = width;
+  this.uiHeight = height;
 
-  this.tileSelectionHeight = 50;
+  this.tileSelectionHeight = Math.floor(0.1 * this.uiHeight);
 
-  this.nextBlockType;
+  this.nextBlockType = null;
 
-};
+  this.uiLeftMargin = this.uiX + Math.floor(0.1 * this.uiWidth);
+  this.uiTopMargin = this.uiY + Math.floor(0.14 * this.uiHeight);
 
-UserInterface.prototype.handleClick = function(x, y) {
 };
 
 UserInterface.prototype.draw = function(context) {
 
   // Draw background
-  context.fillStyle = "#111";
-  context.fillRect(1000, 0, 200, 500);
+  context.fillStyle = SETTINGS.UiBackgroundColor;
+  context.fillRect(this.uiX, this.uiY, this.uiWidth, this.uiHeight);
 
   // Draw game title
-  context.fillStyle = "#FFF";
-  context.font = "40px Arial, sans-serif";
-  context.fillText("elum", 1020, 70);
+  context.fillStyle = SETTINGS.UiTextColor;
+  context.font = SETTINGS.UiFontStyle;
+  context.fillText("elum", this.uiLeftMargin, this.uiTopMargin);
 
   var tileName;
 
@@ -58,13 +65,13 @@ UserInterface.prototype.draw = function(context) {
 
   context.fillStyle = "#FFF";
   context.font = "16px Arial, sans-serif";
-  context.fillText(tileName, 1020, 140);
+  context.fillText(tileName, this.uiLeftMargin, 140);
 
-  context.fillText("toxicity", 1020, 190);
-  context.fillText("water", 1020, 210);
+  context.fillText("toxicity", this.uiLeftMargin, 190);
+  context.fillText("water", this.uiLeftMargin, 210);
 
-  context.fillText("goal", 1020, 420);
-  context.fillText(this.game.currentGoal, 1020, 440);
+  context.fillText("goal", this.uiLeftMargin, 420);
+  context.fillText(this.game.currentGoal, this.uiLeftMargin, 440);
 
   context.fillText(this.game.currentToxicity + "%", 1100, 190);
   context.fillText(this.game.currentWaterLevel + "%", 1100, 210);

@@ -16,6 +16,15 @@ var SETTINGS = {
   // Inner tile color for a block
   BlockInnerColor: [],
 
+  // UI Background
+  UiBackgroundColor: "#111",
+
+  // UI Text Color
+  UiTextColor: "#FFF",
+
+  // UI Font Color
+  UiFontStyle: "40px Arial, sans-serif"
+
 };
 
 SETTINGS.BlockHealth[BLOCK_TYPE.FIRE] = 100;

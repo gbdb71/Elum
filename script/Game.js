@@ -10,7 +10,7 @@ function Game(canvas)
   this.context = canvas.getContext("2d");
 
   this.grid = new Grid(this);
-  this.ui = new UserInterface(this);
+  this.ui = new UserInterface(this, 1000, 0, 200, 500);
 
   this.reset();
 }
