@@ -312,4 +312,15 @@ Game.prototype.checkLevelProgress = function(stats) {
     }
   }
 
+  // Level 6: Spread 5 FIRE blocks with WIND
+  if(this.currentLevel == 6)
+  {
+    if(stats.windSpreadFireCount >= 5)
+    {
+      this.currentLevel++;
+      this.currentGoal = "Balance EARTH and WATER";
+      this.displayMessage("assignment 006", "You're ready to terraform! Balance EARTH and WATER levels");
+    }
+  }
+
 }

@@ -29,6 +29,7 @@ function Grid(game)
   this.globalStats = {};
   this.globalStats.burnedVirusCount = 0;
   this.globalStats.erosionCount = 0;
+  this.globalStats.windSpreadFireCount = 0;
 
 }
 
@@ -272,6 +273,7 @@ Grid.prototype.update = function()
       // WIND can spread FIRE
       if(block.type === BLOCK_TYPE.FIRE && neighborBlock.type === BLOCK_TYPE.WIND)
       {
+        self.globalStats.windSpreadFireCount++;
         self.removeBlock(neighborX, neighborY);
         self.placeBlock(neighborX, neighborY, new Block(BLOCK_TYPE.FIRE));
         return;
@@ -384,6 +386,7 @@ Grid.prototype.update = function()
 
   stats.burnedVirusCount = this.globalStats.burnedVirusCount;
   stats.erosionCount = this.globalStats.erosionCount;
+  stats.windSpreadFireCount = this.globalStats.windSpreadFireCount;
   return stats;
 
 }
