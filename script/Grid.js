@@ -121,7 +121,7 @@ Grid.prototype.removePlaceholder = function()
 
 /**
  * Iterates through all of the blocks neighboring a block at the specified
- * locaiton and executes the provided callback function
+ * location and executes the provided callback function
  * @param {integer}   x         - X-coordinate (in blocks)
  * @param {integer}   y         - Y-coordinate (in blocks)
  * @param {function}  callback  - Function called for each neighbor block
@@ -171,8 +171,14 @@ Grid.prototype.eachNeighborBlock = function(x, y, callback)
 
 }
 
+/**
+ * Iterates through all of the blocks in the grid and executes the provided=
+ * callback function
+ * @param {function}  callback  - Function called for each block
+ */
 Grid.prototype.eachBlock = function(callback)
 {
+  // Construct an array of blocks
   var blocks = [];
 
   for(var x=0; x<this.width; x++)
