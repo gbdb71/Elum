@@ -5,17 +5,26 @@ var NEIGHBOR_DIRECTION = {
   BOTTOM: 3
 };
 
-function Grid(game)
+/**
+ * A grid of blocks
+ * @constructor
+ * @param {Game}    game      - Current game
+ * @param {integer} width     - Width of the grid (in blocks)
+ * @param {integer} height    - Height of the grid (in blocks)
+ * @param {integer} blockSize - Size of the blocks within the grid (in pixels)
+ */
+function Grid(game, width, height, blockSize)
 {
   this.placeholderCoords = null;
 
   this.game = game;
 
-  this.width = 20;
-  this.height = 10;
+  this.width = width;
+  this.height = height;
   this.grid = [];
-  this.tileSize = 50;
+  this.blockSize = blockSize;
 
+  // Initialize the grid
   for(var x=0; x<this.width; x++)
   {
     this.grid[x] = [];
@@ -26,6 +35,8 @@ function Grid(game)
     }
   }
 
+  // Initialize "global" statistics (the statistics that persist through
+  // game updates)
   this.globalStats = {};
   this.globalStats.burnedVirusCount = 0;
   this.globalStats.erosionCount = 0;
@@ -156,24 +167,24 @@ Grid.prototype.eachBlock = function(callback)
 Grid.prototype.getGridCoordinates = function(x, y) {
 
   return {
-      x: Math.floor(x/this.tileSize),
-      y: Math.floor(y/this.tileSize)
+      x: Math.floor(x/this.blockSize),
+      y: Math.floor(y/this.blockSize)
   };
 
 }
 
 Grid.prototype.draw = function(context)
 {
-  var tileSize = this.tileSize;
+  var blockSize = this.blockSize;
 
   // Clear the grid
   context.fillStyle = "#FFFFFF";
-  context.fillRect(0, 0, this.width * tileSize, this.height * tileSize);
+  context.fillRect(0, 0, this.width * blockSize, this.height * blockSize);
 
   if(this.placeholderCoords != null)
   {
     context.fillStyle = "#EEE";
-    UTILITY.drawRoundedSquare(context, this.placeholderCoords.x * tileSize, this.placeholderCoords.y * tileSize, 8, tileSize);
+    UTILITY.drawRoundedSquare(context, this.placeholderCoords.x * blockSize, this.placeholderCoords.y * blockSize, 8, blockSize);
   }
 
   // Draw each tile
@@ -278,7 +289,7 @@ Grid.prototype.update = function()
       {
         self.globalStats.windSpreadFireCount++;
         self.removeBlock(neighborX, neighborY);
-        self.placeBlock(neighborX, neighborY, new Block(BLOCK_TYPE.FIRE, self.tileSize));
+        self.placeBlock(neighborX, neighborY, new Block(BLOCK_TYPE.FIRE, self.blockSize));
         return;
       }
 
@@ -286,7 +297,7 @@ Grid.prototype.update = function()
       if(block.type === BLOCK_TYPE.VIRUS && neighborBlock.type === BLOCK_TYPE.WATER)
       {
         self.removeBlock(neighborX, neighborY);
-        self.placeBlock(neighborX, neighborY, new Block(BLOCK_TYPE.VIRUS, self.tileSize));
+        self.placeBlock(neighborX, neighborY, new Block(BLOCK_TYPE.VIRUS, self.blockSize));
         return;
       }
 
@@ -329,25 +340,25 @@ Grid.prototype.update = function()
         // Spread up
         if(self.canPlaceBlock(x, y - 1))
         {
-          self.placeBlock(x, y - 1, new Block(BLOCK_TYPE.WIND, self.tileSize, {spreadLife: childSpreadLife}));
+          self.placeBlock(x, y - 1, new Block(BLOCK_TYPE.WIND, self.blockSize, {spreadLife: childSpreadLife}));
         }
 
         // Spread down
         if(self.canPlaceBlock(x, y + 1))
         {
-          self.placeBlock(x, y + 1, new Block(BLOCK_TYPE.WIND, self.tileSize, {spreadLife: childSpreadLife}));
+          self.placeBlock(x, y + 1, new Block(BLOCK_TYPE.WIND, self.blockSize, {spreadLife: childSpreadLife}));
         }
 
         // Spread right
         if(self.canPlaceBlock(x + 1, y))
         {
-          self.placeBlock(x + 1, y, new Block(BLOCK_TYPE.WIND, self.tileSize, {spreadLife: childSpreadLife}));
+          self.placeBlock(x + 1, y, new Block(BLOCK_TYPE.WIND, self.blockSize, {spreadLife: childSpreadLife}));
         }
 
         // Spread left
         if(self.canPlaceBlock(x - 1, y))
         {
-          self.placeBlock(x - 1, y, new Block(BLOCK_TYPE.WIND, self.tileSize, {spreadLife: childSpreadLife}));
+          self.placeBlock(x - 1, y, new Block(BLOCK_TYPE.WIND, self.blockSize, {spreadLife: childSpreadLife}));
         }
 
         block.spreadLife = 0;
@@ -375,13 +386,13 @@ Grid.prototype.update = function()
             // Spread right
             if(self.canPlaceBlock(x + 1, y))
             {
-              self.placeBlock(x + 1, y, new Block(BLOCK_TYPE.WATER, self.tileSize, { spreadLife: childSpreadLife }));
+              self.placeBlock(x + 1, y, new Block(BLOCK_TYPE.WATER, self.blockSize, { spreadLife: childSpreadLife }));
             }
 
             // Spread left
             if(self.canPlaceBlock(x - 1, y))
             {
-              self.placeBlock(x - 1, y, new Block(BLOCK_TYPE.WATER, self.tileSize, { spreadLife: childSpreadLife }));
+              self.placeBlock(x - 1, y, new Block(BLOCK_TYPE.WATER, self.blockSize, { spreadLife: childSpreadLife }));
             }
           }
 
