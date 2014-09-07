@@ -204,6 +204,11 @@ Grid.prototype.eachBlock = function(callback)
 
 }
 
+/**
+ * Converts the provided pixel coordinates to grid coordinates (in blocks)
+ * @param {integer} x - X-coordinate (in pixels)
+ * @param {integer} y - Y-coordinate (in pixels)
+ */
 Grid.prototype.getGridCoordinates = function(x, y) {
 
   return {
