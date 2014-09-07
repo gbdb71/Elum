@@ -111,14 +111,24 @@ Grid.prototype.movePlaceholder = function(x, y)
   }
 }
 
-Grid.prototype.removePlaceholder = function(x, y)
+/**
+ * Removes the "placeholder block" (user's cursor)
+ */
+Grid.prototype.removePlaceholder = function()
 {
   this.placeholderCoords = null;
 }
 
+/**
+ * Iterates through all of the blocks neighboring a block at the specified
+ * locaiton and executes the provided callback function
+ * @param {integer}   x         - X-coordinate (in blocks)
+ * @param {integer}   y         - Y-coordinate (in blocks)
+ * @param {function}  callback  - Function called for each neighbor block
+ */
 Grid.prototype.eachNeighborBlock = function(x, y, callback)
 {
-
+  // Construct an array of neighboring blocks
   var neighborBlocks = [];
 
   var bottomBlock = this.getBlock(x, y + 1);
@@ -145,8 +155,11 @@ Grid.prototype.eachNeighborBlock = function(x, y, callback)
     direction: NEIGHBOR_DIRECTION.RIGHT
   });
 
-  for(var i=0; i<4; i++) {
-    if(neighborBlocks[i].block != null) {
+  // Iterate through the neighbor blocks
+  for(var i=0; i<4; i++)
+  {
+    if(neighborBlocks[i].block != null)
+    {
       var currNeighborBlock = neighborBlocks[i];
       callback(
           currNeighborBlock.x,
