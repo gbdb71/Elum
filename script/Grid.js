@@ -300,6 +300,7 @@ Grid.prototype.update = function()
       block.health--;
     }
 
+    // Iterate through neighbor blocks and apply block interactions
     self.eachNeighborBlock(x, y, function(neighborX, neighborY, neighborBlock, direction) {
 
       // Ignore dying or dead neighbor blocks
@@ -367,7 +368,7 @@ Grid.prototype.update = function()
         return;
       }
 
-      // FIRE can burn viruses
+      // FIRE can burn viruses (and ends up killing itself in the process)
       if(block.type === BLOCK_TYPE.VIRUS && neighborBlock.type === BLOCK_TYPE.FIRE)
       {
         self.globalStats.burnedVirusCount++;
@@ -383,6 +384,7 @@ Grid.prototype.update = function()
         return;
       }
 
+      // LIFE is killed by FIRE or WATER
       if(block.type === BLOCK_TYPE.LIFE
           && (neighborBlock.type === BLOCK_TYPE.FIRE || neighborBlock.type === BLOCK_TYPE.WATER))
       {
@@ -392,43 +394,42 @@ Grid.prototype.update = function()
 
     });
 
+    // If a block has depleted all of its health, kill it
     if(block.health <= 0)
     {
       block.kill();
     }
 
-    if(block.type === BLOCK_TYPE.WIND)
+    // WIND spreads wherever its placed
+    if(block.type === BLOCK_TYPE.WIND && block.spreadLife > 0)
     {
-      if(block.spreadLife > 0)
+      var childSpreadLife = block.spreadLife - 1;
+
+      // Spread up
+      if(self.canPlaceBlock(x, y - 1))
       {
-        var childSpreadLife = block.spreadLife - 1;
-
-        // Spread up
-        if(self.canPlaceBlock(x, y - 1))
-        {
-          self.placeBlock(x, y - 1, new Block(BLOCK_TYPE.WIND, self.blockSize, {spreadLife: childSpreadLife}));
-        }
-
-        // Spread down
-        if(self.canPlaceBlock(x, y + 1))
-        {
-          self.placeBlock(x, y + 1, new Block(BLOCK_TYPE.WIND, self.blockSize, {spreadLife: childSpreadLife}));
-        }
-
-        // Spread right
-        if(self.canPlaceBlock(x + 1, y))
-        {
-          self.placeBlock(x + 1, y, new Block(BLOCK_TYPE.WIND, self.blockSize, {spreadLife: childSpreadLife}));
-        }
-
-        // Spread left
-        if(self.canPlaceBlock(x - 1, y))
-        {
-          self.placeBlock(x - 1, y, new Block(BLOCK_TYPE.WIND, self.blockSize, {spreadLife: childSpreadLife}));
-        }
-
-        block.spreadLife = 0;
+        self.placeBlock(x, y - 1, new Block(BLOCK_TYPE.WIND, self.blockSize, {spreadLife: childSpreadLife}));
       }
+
+      // Spread down
+      if(self.canPlaceBlock(x, y + 1))
+      {
+        self.placeBlock(x, y + 1, new Block(BLOCK_TYPE.WIND, self.blockSize, {spreadLife: childSpreadLife}));
+      }
+
+      // Spread right
+      if(self.canPlaceBlock(x + 1, y))
+      {
+        self.placeBlock(x + 1, y, new Block(BLOCK_TYPE.WIND, self.blockSize, {spreadLife: childSpreadLife}));
+      }
+
+      // Spread left
+      if(self.canPlaceBlock(x - 1, y))
+      {
+        self.placeBlock(x - 1, y, new Block(BLOCK_TYPE.WIND, self.blockSize, {spreadLife: childSpreadLife}));
+      }
+
+      block.spreadLife = 0;
     }
     else
     {
@@ -441,6 +442,7 @@ Grid.prototype.update = function()
       else
       {
 
+        // If a block is no longer falling, apply its spread behavior
         if(block.spreadLife > 0)
         {
 
@@ -471,6 +473,7 @@ Grid.prototype.update = function()
 
   });
 
+  // Update the "special" stats by copying the global stats
   stats.burnedVirusCount = this.globalStats.burnedVirusCount;
   stats.erosionCount = this.globalStats.erosionCount;
   stats.windSpreadFireCount = this.globalStats.windSpreadFireCount;
