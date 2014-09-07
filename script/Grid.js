@@ -44,28 +44,38 @@ function Grid(game, width, height, blockSize)
 
 }
 
+/**
+ * Places a block at the specified location within the grid
+ * @param {integer} x     - X-coordinate (in blocks)
+ * @param {integer} y     - Y-coordinate (in blocks)
+ * @param {integer} block - Block to place
+ */
 Grid.prototype.placeBlock = function(x, y, block)
 {
-
   this.grid[x][y] = block;
-
 }
 
+/**
+ * Removes the block from the specified location in grid
+ * @param {integer} x     - X-coordinate (in blocks)
+ * @param {integer} y     - Y-coordinate (in blocks)
+ */
 Grid.prototype.removeBlock = function(x, y)
 {
-
   this.grid[x][y] = null;
-
 }
 
+/**
+ * Whether or not the specified location is a valid coordinate within the grid
+ * @param {integer} x     - X-coordinate (in blocks)
+ * @param {integer} y     - Y-coordinate (in blocks)
+ */
 Grid.prototype.isValidTile = function(x, y)
 {
-
   return (x >= 0)
           && (x < this.width)
           && (y >= 0)
           && (y < this.height);
-
 }
 
 Grid.prototype.canPlaceBlock = function(x, y)
