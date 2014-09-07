@@ -175,7 +175,7 @@ Game.prototype.handleMouseMove = function(game, mouseEvent)
 
     if(game.grid.canPlaceBlock(gridCoords.x, gridCoords.y))
     {
-      game.grid.addPlaceholder(gridCoords.x, gridCoords.y);
+      game.grid.movePlaceholder(gridCoords.x, gridCoords.y);
       return;
     }
 

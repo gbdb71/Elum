@@ -57,8 +57,8 @@ Grid.prototype.placeBlock = function(x, y, block)
 
 /**
  * Removes the block from the specified location in grid
- * @param {integer} x     - X-coordinate (in blocks)
- * @param {integer} y     - Y-coordinate (in blocks)
+ * @param {integer} x - X-coordinate (in blocks)
+ * @param {integer} y - Y-coordinate (in blocks)
  */
 Grid.prototype.removeBlock = function(x, y)
 {
@@ -67,8 +67,8 @@ Grid.prototype.removeBlock = function(x, y)
 
 /**
  * Whether or not the specified location is a valid coordinate within the grid
- * @param {integer} x     - X-coordinate (in blocks)
- * @param {integer} y     - Y-coordinate (in blocks)
+ * @param {integer} x - X-coordinate (in blocks)
+ * @param {integer} y - Y-coordinate (in blocks)
  */
 Grid.prototype.isValidTile = function(x, y)
 {
@@ -78,21 +78,32 @@ Grid.prototype.isValidTile = function(x, y)
           && (y < this.height);
 }
 
+/**
+ * Whether or not a block can be placed at the specified location
+ * @param {integer} x - X-coordinate (in blocks)
+ * @param {integer} y - Y-coordinate (in blocks)
+ */
 Grid.prototype.canPlaceBlock = function(x, y)
 {
-
   return this.isValidTile(x, y) && (this.grid[x][y] === null);
-
 }
 
+/**
+ * Returns the block at the specified location
+ * @param {integer} x - X-coordinate (in blocks)
+ * @param {integer} y - Y-coordinate (in blocks)
+ */
 Grid.prototype.getBlock = function(x, y)
 {
-
   return (this.isValidTile(x, y)) ? this.grid[x][y] : null;
-
 }
 
-Grid.prototype.addPlaceholder = function(x, y)
+/**
+ * Moves the location of the "placeholder block" (user's cursor)
+ * @param {integer} x - X-coordinate (in blocks)
+ * @param {integer} y - Y-coordinate (in blocks)
+ */
+Grid.prototype.movePlaceholder = function(x, y)
 {
   if(this.isValidTile(x, y))
   {
