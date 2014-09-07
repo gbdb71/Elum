@@ -26,7 +26,13 @@ var SETTINGS = {
   UiTitleFontStyle: "40px Arial, sans-serif",
 
   // UI Font Style
-  UiFontStyle: "16px Arial, sans-serif"
+  UiFontStyle: "16px Arial, sans-serif",
+
+  // Grid Background Color
+  GridBackgroundColor: "#FFF",
+
+  // Placeholder Color
+  PlaceholderColor: "#EEE"
 
 };
 

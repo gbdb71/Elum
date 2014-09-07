@@ -35,6 +35,8 @@ function Grid(game, width, height, blockSize)
     }
   }
 
+  this.placeholderRadius = Math.floor(0.16 * blockSize);
+
   // Initialize "global" statistics (the statistics that persist through
   // game updates)
   this.globalStats = {};
@@ -218,18 +220,27 @@ Grid.prototype.getGridCoordinates = function(x, y) {
 
 }
 
+/**
+ * Renders the grid
+ * @param {CanvasRenderingContext2D}  context - 2D rendering context to use when rendering the block
+ */
 Grid.prototype.draw = function(context)
 {
   var blockSize = this.blockSize;
 
   // Clear the grid
-  context.fillStyle = "#FFFFFF";
+  context.fillStyle = SETTINGS.GridBackgroundColor;
   context.fillRect(0, 0, this.width * blockSize, this.height * blockSize);
 
+  // Draw the placeholder
   if(this.placeholderCoords != null)
   {
-    context.fillStyle = "#EEE";
-    UTILITY.drawRoundedSquare(context, this.placeholderCoords.x * blockSize, this.placeholderCoords.y * blockSize, 8, blockSize);
+    context.fillStyle = SETTINGS.PlaceholderColor;
+    UTILITY.drawRoundedSquare(
+        context,
+        this.placeholderCoords.x * blockSize,
+        this.placeholderCoords.y * blockSize,
+        this.placeholderRadius, blockSize);
   }
 
   // Draw each tile
@@ -239,10 +250,14 @@ Grid.prototype.draw = function(context)
 
 }
 
+/**
+ * Updates the status of the grid
+ */
 Grid.prototype.update = function()
 {
   var self = this;
 
+  // Initialize stats
   var stats = {};
   stats.blockCounts = {};
   stats.blockCounts[BLOCK_TYPE.EARTH] = 0;
@@ -255,10 +270,13 @@ Grid.prototype.update = function()
 
     block.update();
 
+    // If a block is dead, remove it
     if(block.isDead)
     {
       if(block.type === BLOCK_TYPE.EARTH)
       {
+        // EARTH blocks can only be destroyed through erosion, so we can
+        // safely increase the erosion statistic
         self.globalStats.erosionCount++;
       }
 
@@ -266,6 +284,7 @@ Grid.prototype.update = function()
       return;
     }
 
+    // If a block is dying, ignore it
     if(block.isDying)
     {
       return;
@@ -273,13 +292,17 @@ Grid.prototype.update = function()
 
     stats.blockCounts[block.type]++;
 
-    if(block.type === BLOCK_TYPE.FIRE || block.type === BLOCK_TYPE.WIND || block.type === BLOCK_TYPE.WATER)
+    // FIRE, WIND, and WATER blocks lose health with time
+    if(block.type === BLOCK_TYPE.FIRE
+          || block.type === BLOCK_TYPE.WIND
+          || block.type === BLOCK_TYPE.WATER)
     {
       block.health--;
     }
 
     self.eachNeighborBlock(x, y, function(neighborX, neighborY, neighborBlock, direction) {
 
+      // Ignore dying or dead neighbor blocks
       if(neighborBlock.isDead || neighborBlock.isDying)
       {
         return;
@@ -287,7 +310,7 @@ Grid.prototype.update = function()
 
       if(direction === NEIGHBOR_DIRECTION.BOTTOM)
       {
-        // EARTH smothers FIRE and crushes WIND beneath it
+        // EARTH destroys WIND, FIRE, WATER, and LIFE beneath it
         if(block.type === BLOCK_TYPE.EARTH
             && (
                   neighborBlock.type === BLOCK_TYPE.WIND
@@ -300,12 +323,10 @@ Grid.prototype.update = function()
           neighborBlock.kill();
           return;
         }
-      }
 
-      if(direction === NEIGHBOR_DIRECTION.BOTTOM)
-      {
-        // WATER consumes other WATER
-        if(block.type === BLOCK_TYPE.WATER && neighborBlock.type === BLOCK_TYPE.WATER)
+        // WATER consumes other WATER beneath it
+        if(block.type === BLOCK_TYPE.WATER
+              && neighborBlock.type === BLOCK_TYPE.WATER)
         {
           neighborBlock.kill();
           return;
