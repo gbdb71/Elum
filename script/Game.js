@@ -53,50 +53,56 @@ Game.prototype.reset = function()
   this.currentGoal = "";
 }
 
+/**
+ * Updates the status of the game
+ */
 Game.prototype.update = function()
 {
-  if(this.currentState === GAME_STATE.PLAYING)
+  if(this.currentState != GAME_STATE.PLAYING)
   {
-    var stats = this.grid.update();
-    this.checkLevelProgress(stats);
+    return;
+  }
 
-    this.updateVirusCount(stats.blockCounts[BLOCK_TYPE.VIRUS]);
-    this.updateWaterLevel(stats.blockCounts[BLOCK_TYPE.WATER]);
+  var stats = this.grid.update();
 
-    if(this.virusesEnabled)
+  // Update level progress and statistics
+  this.checkLevelProgress(stats);
+  this.updateVirusCount(stats.blockCounts[BLOCK_TYPE.VIRUS]);
+  this.updateWaterLevel(stats.blockCounts[BLOCK_TYPE.WATER]);
+
+  // Drop viruses
+  this.dropIntervalBlock(
+      this.virusesEnabled,
+      ++this.virusTimer, this.virusDropInterval,
+      BLOCK_TYPE.VIRUS))
+    && this.virusTimer = 0;
+
+  // Drop life
+  this.dropIntervalBlock(
+      this.lifeEnabled,
+      ++this.lifeTimer, this.lifeDropInterval,
+      BLOCK_TYPE.LIFE))
+    && this.lifeTimer = 0;
+}
+
+Game.prototype.dropIntervalBlock = function(dropCondition, timer, interval, blockType) {
+
+  if(dropCondition)
+  {
+    if(timer > interval)
     {
-      this.virusTimer++;
+      var dropX = Math.floor(Math.random() * this.grid.width);
 
-      if(this.virusTimer > this.virusDropInterval)
+      if(this.grid.canPlaceBlock(dropX, 0))
       {
-        var virusX = Math.floor(Math.random() * this.grid.width);
-
-        if(this.grid.canPlaceBlock(virusX, 0))
-        {
-          this.grid.placeBlock(virusX, 0, new Block(BLOCK_TYPE.VIRUS, 50));
-        }
-
-        this.virusTimer = 0;
-      }
-    }
-
-    if(this.lifeEnabled)
-    {
-      this.lifeTimer++;
-
-      if(this.lifeTimer > this.lifeDropInterval)
-      {
-        var lifeX = Math.floor(Math.random() * this.grid.width);
-
-        if(this.grid.canPlaceBlock(lifeX, 0))
-        {
-          this.grid.placeBlock(lifeX, 0, new Block(BLOCK_TYPE.LIFE, 50));
-        }
-
-        this.lifeTimer = 0;
+        this.grid.placeBlock(dropX, 0, new Block(blockType, this.blockSize));
+        return true;
       }
     }
   }
+
+  return false;
+
 }
 
 Game.prototype.draw = function()
