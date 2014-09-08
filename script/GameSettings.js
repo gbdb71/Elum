@@ -22,6 +22,14 @@ var SETTINGS = {
   // Inner tile color for a block
   BlockInnerColor: [],
 
+  // After VIRUS blocks are enabled in-game, how many game "ticks" between each
+  // drop of a VIRUS block
+  VirusDropInterval: 40,
+
+  // After LIFE blocks are enabled in-game, how many game "ticks" between each
+  // drop of a new LIFE block (if conditions to support LIFE have been met)
+  LifeDropInterval: 100,
+
   // UI Background
   UiBackgroundColor: "#111",
 

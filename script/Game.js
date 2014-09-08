@@ -28,19 +28,22 @@ function Game(canvas)
   this.reset();
 }
 
+/**
+ * Resets the game to its initial state
+ */
 Game.prototype.reset = function()
 {
-  this.nextBlockType;
+  this.nextBlockType = null;
   this.placeableBlocks = [BLOCK_TYPE.EARTH];
   this.overrideBlock = null;
 
   this.virusesEnabled = false;
   this.virusTimer = 0;
-  this.virusDropInterval = 40;
+  this.virusDropInterval = SETTINGS.VirusDropInterval;
 
   this.lifeEnabled = false;
   this.lifeTimer = 0;
-  this.lifeDropInterval = 100;
+  this.lifeDropInterval = SETTINGS.LifeDropInterval;
 
   this.currentToxicity = 0;
   this.currentTerraform = 0;
