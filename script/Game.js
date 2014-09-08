@@ -4,13 +4,26 @@ var GAME_STATE = {
   GAME_OVER: 3
 };
 
+/**
+ * The game
+ * @constructor
+ * @param {HTMLCanvasElement} canvas  - Canvas for displaying the game
+ */
 function Game(canvas)
 {
   this.canvas = canvas;
   this.context = canvas.getContext("2d");
 
-  this.grid = new Grid(this, 20, 10, 50);
-  this.ui = new UserInterface(this, 1000, 0, 200, 500);
+  var canvasWidth = canvas.width;
+  var canvasHeight = canvas.height;
+
+  var uiWidth = Math.floor(0.1666666666666667 * canvasWidth);
+
+  var gridWidth = canvasWidth - uiWidth;
+  var blockSize = Math.floor(gridWidth/SETTINGS.GridWidth);
+
+  this.grid = new Grid(this, SETTINGS.GridWidth, SETTINGS.GridHeight, blockSize);
+  this.ui = new UserInterface(this, gridWidth, 0, uiWidth, canvasHeight);
 
   this.reset();
 }

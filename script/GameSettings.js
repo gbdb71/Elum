@@ -1,5 +1,11 @@
 var SETTINGS = {
 
+  // How many blocks fit "across" the game's grid
+  GridWidth: 20,
+
+  // How many blocks fit "down" the game's grid
+  GridHeight: 10,
+
   // Health of individual blocks
   BlockHealth: [],
 
@@ -63,11 +69,3 @@ SETTINGS.BlockInnerColor[BLOCK_TYPE.WATER] = "29, 87, 163";
 SETTINGS.BlockInnerColor[BLOCK_TYPE.EARTH] = "168, 93, 30";
 SETTINGS.BlockInnerColor[BLOCK_TYPE.VIRUS] = "64, 138, 32";
 SETTINGS.BlockInnerColor[BLOCK_TYPE.LIFE] = "1, 1, 1";
-
-
-/*
-  default:
-
-    break;
-}
-*/
